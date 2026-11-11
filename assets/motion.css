@@ -1,0 +1,119 @@
+/* sms engineering — Bewegung
+   Alles hier haengt an der Klasse .js-motion, die motion.js am <html> setzt.
+   Ohne JavaScript ist die Seite damit vollstaendig sichtbar und ruhig.
+   Animiert wird ausschliesslich transform, scale, opacity und clip-path -
+   das laeuft im Compositor und kostet kein Layout.
+*/
+
+:root {
+  --mo-ease: cubic-bezier(.22, .61, .36, 1);
+  --mo-dur: .62s;
+}
+
+/* --- 1. Einblenden beim Scrollen ---------------------------------------- */
+.js-motion [data-anim] {
+  opacity: 0;
+  transition: opacity var(--mo-dur) var(--mo-ease) var(--d, 0ms),
+              transform var(--mo-dur) var(--mo-ease) var(--d, 0ms),
+              clip-path .8s var(--mo-ease) var(--d, 0ms),
+              scale var(--mo-dur) var(--mo-ease) var(--d, 0ms);
+}
+.js-motion [data-anim="up"]    { transform: translateY(16px); }
+.js-motion [data-anim="rise"]  { transform: translateY(22px); clip-path: inset(0 0 100% 0); }
+.js-motion [data-anim="scale"] { transform: translateY(10px); scale: .988; }
+
+.js-motion [data-anim].is-in                 { opacity: 1; }
+.js-motion [data-anim].is-in:not([data-px])  { transform: none; }
+.js-motion [data-anim="scale"].is-in         { scale: 1; }
+.js-motion [data-anim="rise"].is-in          { clip-path: inset(0 0 -14% 0); }
+
+/* --- 2. Parallax --------------------------------------------------------- */
+/* --py setzt motion.js im Scroll-Takt. Die Elemente bekommen bewusst kein
+   transform aus dem Einblenden, sonst wuerden sich beide ueberschreiben. */
+.js-motion [data-px] { transform: translate3d(0, var(--py, 0px), 0); }
+.js-motion [data-px="hero"] { opacity: var(--po, 1); }
+
+.js-motion .ds-card { overflow: hidden; }
+/* Der Rahmen uebernimmt die Hoehe des Bildes aus dem normalen Fluss und
+   schneidet weg, was der Zoom darueber hinausschiebt. */
+.js-motion .px-frame { display: block; width: 100%; overflow: hidden; }
+.js-motion .ds-card__photo {
+  transform: translate3d(0, var(--py, 0px), 0);
+  scale: 1.085;
+  transition: scale .6s var(--mo-ease);
+  will-change: transform;
+}
+.js-motion .ds-card:hover .ds-card__photo,
+.js-motion .ds-card:focus-within .ds-card__photo { scale: 1.14; }
+
+/* --- 3. Kopfbereich ------------------------------------------------------ */
+.js-motion .site-header {
+  transition: transform .42s cubic-bezier(.3, .7, .2, 1),
+              box-shadow .3s ease, background-color .3s ease;
+}
+.js-motion .site-header.is-scrolled { box-shadow: 0 8px 28px rgba(13, 19, 27, .11); }
+.js-motion .site-header.is-hidden { transform: translateY(-102%); }
+.js-motion .site-header__inner { transition: min-height .3s var(--mo-ease); }
+.js-motion .site-header.is-scrolled .site-header__inner { min-height: 64px; }
+
+/* Burger wird beim Oeffnen zum Kreuz */
+.js-motion .burger__bars,
+.js-motion .burger__bars::before,
+.js-motion .burger__bars::after {
+  transition: transform .3s var(--mo-ease), opacity .18s linear;
+}
+.js-motion .burger[aria-expanded="true"] .burger__bars { background: transparent; }
+.js-motion .burger[aria-expanded="true"] .burger__bars::before { transform: translateY(7px) rotate(45deg); }
+.js-motion .burger[aria-expanded="true"] .burger__bars::after  { transform: translateY(-7px) rotate(-45deg); }
+
+/* Lesefortschritt als duenne Linie an der Unterkante der Kopfleiste */
+.js-motion .read-bar {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: var(--primary); transform: scaleX(0); transform-origin: left center;
+  will-change: transform; pointer-events: none;
+}
+.js-motion .site-header { position: sticky; }
+
+/* --- 4. Kleinteile ------------------------------------------------------- */
+.js-motion .ds-link { position: relative; }
+.js-motion .ds-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left center;
+  transition: transform .38s var(--mo-ease);
+}
+.js-motion .ds-link:hover::after,
+.js-motion .ds-link:focus-visible::after { transform: scaleX(1); }
+.js-motion .ds-link__chev { transition: transform .3s var(--mo-ease); }
+.js-motion .ds-link:hover .ds-link__chev { transform: translateX(5px); }
+
+.js-motion .ds-btn {
+  transition: transform .28s var(--mo-ease), background-color .25s ease,
+              color .25s ease, box-shadow .28s var(--mo-ease);
+}
+.js-motion .ds-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(13, 19, 27, .18); }
+.js-motion .ds-btn:active { transform: translateY(0); box-shadow: none; }
+
+.js-motion .nav .t-nav { position: relative; }
+.js-motion .nav > .t-nav::after,
+.js-motion .nav .nav-group__top::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+  background: var(--primary); transform: scaleX(0); transform-origin: left center;
+  transition: transform .32s var(--mo-ease);
+}
+/* Nur beim Ueberfahren - die aktive Seite erkennt man an Schnitt und
+   Groesse, nicht an einer zweiten Linie. */
+.js-motion .nav > .t-nav:hover::after,
+.js-motion .nav .nav-group:hover .nav-group__top::after { transform: scaleX(1); }
+.js-motion .nav-contact::after { display: none; }
+
+.js-motion .ds-spec__value { font-variant-numeric: tabular-nums; }
+
+/* --- 5. Bewegung aus ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .js-motion [data-anim],
+  .js-motion [data-anim].is-in {
+    opacity: 1; transform: none; scale: 1; clip-path: none; transition: none;
+  }
+  .js-motion [data-px], .js-motion .ds-card__photo { transform: none; scale: 1; }
+  .js-motion .site-header.is-hidden { transform: none; }
+}

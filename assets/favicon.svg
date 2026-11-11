@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="sms engineering">
+  <rect width="64" height="64" fill="#1a2129"/>
+  <rect y="0" width="21.33" height="6" fill="#f0432f"/>
+  <rect x="21.33" width="21.34" height="6" fill="#e22718"/>
+  <rect x="42.67" width="21.33" height="6" fill="#a3140c"/>
+  <text x="32" y="44" font-family="Archivo, Arial, sans-serif" font-size="26" font-weight="700"
+        fill="#ffffff" text-anchor="middle">sms</text>
+</svg>
