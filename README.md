@@ -305,10 +305,27 @@ Geprüft mit `build/check-nav.js`.
 ## Bildkopf
 
 Jede Seite öffnet mit einem großen Bildkopf: ein Foto über die volle Breite,
-Mindesthöhe `clamp(420px, 66vh, 700px)`, der Text sitzt unten darauf, am Fuß
-eine 3 px dünne rote Kante als Naht zum Inhalt. Darunter folgt der Inhalt auf
-ruhigen hellen Flächen — **Bildhintergrund gibt es nur hier**, nicht über die
-ganze Seite.
+am Fuß eine 3 px dünne rote Kante als Naht zum Inhalt. Darunter folgt der
+Inhalt auf ruhigen hellen Flächen — **Bildhintergrund gibt es nur hier**,
+nicht über die ganze Seite.
+
+**Der Abstand zur Überschrift ist auf allen 27 Seiten gleich: 321 px** unter
+der Kopfleiste (gemessen bei 1440 px Fensterbreite; bei 900 px sind es 213 px).
+Vorher war es umgekehrt: Der Bildkopf hatte eine feste Höhe und der Text war
+unten angeschlagen — damit hing die Lage der Überschrift an der Textlänge und
+sprang von Seite zu Seite um bis zu **400 px** (148 px auf der Startseite,
+543 px auf den Beitragsseiten). Jetzt steht die Polsterung oben fest
+(`clamp(140px, 20vw, 300px)`), der Inhalt beginnt dort, und die Höhe des
+Bildkopfs ergibt sich aus dem Text. Unter dem Textblock bleiben dadurch immer
+dieselben 80 px bis zur roten Kante. Die Mindesthöhe
+(`clamp(360px, 44vh, 520px)`) greift nur noch auf sehr kurzen Seiten.
+
+Zwei Kleinigkeiten mussten dafür mit: Die Polsterung stand bisher im
+`style`-Attribut jeder einzelnen Seite und war aus dem Stylesheet gar nicht
+erreichbar — ein Inline-Stil gewinnt immer. `build/kopfabstand.py` holt sie
+heraus, seitdem steht sie an einer Stelle. Und die Startseite hatte als
+einzige 20 px Abstand zwischen Kennzeile und Überschrift statt 16 px; das
+allein waren 4 px Unterschied.
 
 **Was dafür weichen musste.** Im Design hatte der Kopfbereich zwei Spalten:
 Text links, ein zweites Foto rechts — und dahinter lief noch ein drittes Bild
@@ -363,6 +380,45 @@ Der Kontakt-Knopf in der Kopfleiste, der Eintrag im Mobilmenü und ein neuer
 Link im Fußbereich zeigen jetzt auf diese Seite statt auf einen
 `mailto:`-Link.
 
+## Das Logo in der Kopfleiste
+
+Die Kopfleiste trägt das vom Kunden gelieferte Logo (`sms-header-logo.png`,
+325 × 136 px, dunkle Schrift, roter Schmetterling, transparenter Grund)
+unverändert — **ohne Plakette**, direkt auf der weißen Leiste. Anzeigehöhe
+48 px, unter 480 px Fensterbreite 38 px.
+
+Davor standen zwei verworfene Zwischenschritte: erst das dunkle Logo auf
+weißer Plakette (zu klein, kaum zu erkennen), dann eine helle Fassung auf
+schwarzer Plakette. Für die zweite musste die helle Fassung erst aus der
+großen dunklen Vorlage gerechnet werden, weil es sie in hoher Auflösung nicht
+gab. Der Weg ist als Modus `hell` in `build/einsetzen.py` erhalten, wird aber
+nicht mehr verwendet — die Zuordnung in `build/zuordnung.py` zeigt jetzt auf
+die gelieferte Kopfleisten-Fassung mit Modus `keep`.
+
+## Shop statt Aktuelles
+
+Die Seite „Aktuelles" und die sechs Beitragsseiten sind entfernt, mitsamt dem
+Aktuelles-Abschnitt auf der Startseite und dem Beitragsverweis auf der
+Fertigungsseite. An die erste Stelle des Kopfmenüs ist ein **Shop-Knopf**
+gerückt: `https://shop.sms.gmbh`, neuer Tab, `rel="noopener"`, im selben Stil
+wie der Kontakt-Knopf (schwarz, beim Überfahren rot, Schrift bleibt weiß). Im
+Mobilmenü steht er ganz oben, im Fußbereich als normaler Link an erster
+Stelle unter „Links".
+
+Zwei Dinge, die dabei mitlaufen mussten:
+
+* Die Regel `.nav > a { color: … }` ist spezifischer als `.ds-btn--primary`
+  und hätte dem Shop-Knopf — wie zuvor schon dem Kontakt-Knopf — die dunkle
+  Textfarbe aufgezwungen. Er ist jetzt ebenfalls ausgenommen.
+* Auf der Startseite stießen nach dem Entfernen zwei weiße Sektionen
+  aneinander und wären optisch zu einem Block verschmolzen. Die zweite steht
+  jetzt auf dem hellgrauen Ton; `build/shop-und-aktuelles.py` prüft das
+  generell und ist mehrfach ausführbar.
+
+`build/postprocess.py` erzeugte die Beitragsseiten aus `aktuelles.html`. Es
+überspringt diesen Teil jetzt, wenn die Datei fehlt — die Platzhalter-PDFs
+entstehen weiterhin.
+
 ## Der Kontakt-Knopf
 
 Schwarz mit weißer Schrift, beim Überfahren fährt er über 0,3 s weich auf
@@ -395,11 +451,34 @@ wird zusätzlich der sichtbare Elternpunkt hervorgehoben:
 Im Mobilmenü ist die aktive Seite ebenfalls rot und halbfett; dort sind alle
 Ebenen offen, eine Elternmarkierung braucht es nicht.
 
+## Anfragen führen auf das Formular
+
+Abschnitte, die zu einer Anfrage auffordern, zeigen nicht mehr auf einen
+`mailto:`-Link mit der Adresse als Knopfbeschriftung, sondern direkt auf das
+Kontaktformular — mit vorgewähltem Thema über `?thema=`:
+
+| Seite | vorher | jetzt |
+|---|---|---|
+| `index.html` (Band „Ihr Projekt, unsere Werkstatt") | `mailto:info@sms.gmbh`, Knopftext = Adresse | `kontakt.html`, Knopftext „Anfrage senden" |
+| `revo-x.html` („Schnuppertag anfragen") | `mailto:revo@sms.gmbh` | `kontakt.html?thema=revo-x` |
+| `revo-sl.html` (Fließtext) | „Anfragen richten Sie an revo@sms.gmbh" | „über das Kontaktformular" → `?thema=revo-sl` |
+| `bestellformulare.html` | `mailto:revo@sms.gmbh` | `kontakt.html?thema=angebot` |
+
+Geprüft durch Anklicken im Browser: alle vier landen auf `kontakt.html`, das
+Themenfeld steht jeweils schon richtig („Elektro-Kart — sms revo X",
+„Elektro-Kart — sms revo SL", „Angebot oder Bestellung"), und die Seite
+beginnt oben.
+
+Adressen stehen weiterhin dort, wo man sie erwartet: im Fußbereich und im
+Kasten „Direkt erreichen" neben dem Formular. Nur die Handlungsaufforderungen
+wurden umgehängt. Das Skript dazu ist `build/anfragen.py` und mehrfach
+ausführbar.
+
 ## Geprüft
 
-Alle 26 Seiten in Chromium: HTTP 200, keine JavaScript-Fehler, keine
+Alle 20 Seiten in Chromium: HTTP 200, keine JavaScript-Fehler, keine
 Konsolenfehler, genau ein `<h1>`, kein horizontales Überlaufen bei 390, 900,
-1159, 1160 und 1440 px, 1438 interne Verweise ohne einen einzigen toten Link,
+1159, 1160 und 1440 px, 903 interne Verweise ohne einen einzigen toten Link,
 kein fehlendes Bild. Umschaltpunkt der Navigation und Mobilmenü inklusive
 Esc-Taste und Scroll-Sperre geprüft.
 

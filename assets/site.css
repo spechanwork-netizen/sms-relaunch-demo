@@ -39,17 +39,20 @@ h1, h2, h3, h4, p, ul { margin: 0; }
   padding: 0 clamp(16px, 3vw, 32px); min-height: 76px;
   display: flex; align-items: center; gap: clamp(16px, 2vw, 40px);
 }
+/* Keine Plakette mehr: das Logo ist die dunkle Fassung auf transparentem
+   Grund und sitzt direkt auf der weissen Kopfleiste. */
 .brand {
-  display: flex; align-items: center; background: var(--canvas);
-  padding: 8px 12px; flex: none;
+  display: flex; align-items: center; background: transparent;
+  padding: 8px 0; flex: none;
 }
-.brand img { height: 34px; width: auto; display: block; }
+.brand img { height: 48px; width: auto; display: block; }
+@media (max-width: 480px) { .brand img { height: 38px; } }
 
 .nav { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 30px); margin-left: auto; }
 /* Der Kontakt-Knopf ist hier ausgenommen: .nav > a ist spezifischer als
    .ds-btn--primary und hat ihm die dunkle Textfarbe aufgezwungen - dunkel
    auf Rot kam auf 2,5:1 und war nicht lesbar. */
-.nav > a:not(.nav-contact), .nav__top { color: var(--ink); }
+.nav > a:not(.nav-contact):not(.nav-shop), .nav__top { color: var(--ink); }
 .hv-primary:hover, .hv-primary:focus-visible { color: var(--primary); }
 .hv-primary-soft:hover, .hv-primary-soft:focus-visible { color: var(--primary); background: var(--surface-soft); }
 .hv-contact:hover, .hv-contact:focus-visible { background: var(--primary-active); color: var(--on-primary); }
@@ -83,12 +86,13 @@ h1, h2, h3, h4, p, ul { margin: 0; }
 
 /* Kontakt-Knopf: schwarz mit weisser Schrift, faehrt beim Ueberfahren
    weich auf Rot. Die Schrift bleibt dabei weiss. */
-.ds-btn.nav-contact, .ds-btn.mnav__cta {
+.ds-btn.nav-contact, .ds-btn.nav-shop, .ds-btn.mnav__cta {
   background: var(--surface-dark); color: var(--on-dark);
   transition: background-color .3s cubic-bezier(.22, .61, .36, 1),
               color .3s cubic-bezier(.22, .61, .36, 1);
 }
 .ds-btn.nav-contact:hover, .ds-btn.nav-contact:focus-visible,
+.ds-btn.nav-shop:hover, .ds-btn.nav-shop:focus-visible,
 .ds-btn.mnav__cta:hover, .ds-btn.mnav__cta:focus-visible {
   background: var(--primary); color: var(--on-dark);
 }
@@ -140,8 +144,15 @@ body.mnav-open { overflow: hidden; }
   /* Der Bildkopf ist der einzige Ort mit Bildhintergrund. Er traegt die
      Seite, deshalb bekommt er eine Mindesthoehe und der Inhalt sitzt
      unten - darueber bleibt das Bild frei sichtbar. */
-  min-height: clamp(420px, 66vh, 700px);
-  display: grid; align-content: end;
+  /* Der Abstand von der Kopfleiste zur Ueberschrift ist fest - damit steht
+     die H1 auf jeder Seite an derselben Stelle. Die Hoehe des Bildkopfs
+     richtet sich danach nach dem Inhalt: unter dem Text bleiben immer
+     dieselben 48-80 px. Vorher war es umgekehrt - feste Hoehe, Inhalt unten
+     angeschlagen - und die Ueberschrift sprang je nach Textlaenge um bis zu
+     400 px. Die Mindesthoehe greift nur noch auf kurzen Seiten. */
+  min-height: clamp(360px, 44vh, 520px);
+  display: grid; align-content: start;
+  padding: clamp(140px, 20vw, 300px) clamp(20px, 4vw, 32px) clamp(48px, 7vw, 80px);
 }
 .hero-parallax::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
