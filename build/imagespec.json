@@ -1,0 +1,332 @@
+{
+ "content": {
+  "sms_konstruktion_entwicklung_01.png": {
+   "label": "Engineering",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_fertigung_montage_01.png": {
+   "label": "Fertigung",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_lehren-messmittelbau_01.png": {
+   "label": "Messen & Prüfen",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms-e-Kart-Training-1024x683.jpg": {
+   "label": "Elektro-Kart",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "revo-SL-@DKSM-Finale-320x202.png": {
+   "label": "sms stellt eKarts für Deutsche Kartslalom-Meisterschaft 2025",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "revo-SL-@Bundesendlauf-320x202.png": {
+   "label": "sms stellt eKarts für ADAC Bundesendlauf",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "E-Kart-sms-engineering-2-1024x683.jpg": {
+   "label": "sms revo SL Elektro-Slalom-Kart",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "engineering.jpg": {
+   "label": "CNC-gefertigtes Bauteil",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "smsengineering_Website_Bild_Vertriebspartnerschaft_Beule.png": {
+   "label": "sms und Beule-Kart vertiefen Partnerschaft",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Neue-Maschine-DMF-200-8-1-320x202.png": {
+   "label": "Neuzugang: 4-Achs-CNC-Fräsmaschine",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Universal-Antriebsstrang-sms-engineering-320x202.png": {
+   "label": "Universal-Antriebsstrang für alle Hersteller",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Batterie-Leasing-eKart-320x202.png": {
+   "label": "Batterie-Leasing für das sms revo SL",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Freigestellt-01-GUT-e1786614143161.png": {
+   "label": "sms engineering",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "leomax-firmenstruktur_Zeichenflaeche-1.png": {
+   "label": "Struktur der leomax-Firmengruppe",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_emobilitaet.jpg": {
+   "label": "E-Mobilität",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_lehren-messmittelbau_03.png": {
+   "label": "Lehren- und Messmittelbau",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_stuetzgestelle_02.jpg": {
+   "label": "Sicherheitszellen und Stützgestelle",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_konstruktion_entwicklung_02.png": {
+   "label": "Komponenten",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_konstruktion_entwicklung_03.png": {
+   "label": "Werkzeuge und Vorrichtungen",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_lehren-messmittelbau_02.png": {
+   "label": "Prüfvorrichtung",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_stuetzgestelle.jpg": {
+   "label": "Stützgestell",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms_stuetzgestelle_03.jpg": {
+   "label": "Stützgestell im Einsatz",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "IMG_8576-scaled.jpg": {
+   "label": "sms revo X",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Inklusives-Kart-1024x683.jpg": {
+   "label": "sms revo SpaceDrive",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Elektro-Slalom-Kart.jpg": {
+   "label": "Elektro-Slalom-Kart",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Elektro-Slalom-Kart-Bad-Aibling.jpg": {
+   "label": "Elektro-Slalom-Kart Bad Aibling",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms-revo-SL-Hockenheimring-11-scaled.jpg": {
+   "label": "Im Einsatz bei der Deutschen Kart-Slalom-Meisterschaft",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms-revo-SL-Hockenheimring-13-scaled-e1666783706334.jpg": {
+   "label": "sms eKarts",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms-revo-SL-Hockenheimring-8-scaled.jpg": {
+   "label": "Demorunden im Parcours",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms-revo-SL-Hockenheimring-6-scaled.jpg": {
+   "label": "Vorstellung bei der Deutschen Kart-Slalom-Meisterschaft 2022",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "sms-revo-SL-Hockenheimring-2-scaled.jpg": {
+   "label": "Ausstellung am Hockenheimring",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "IMG_2384-scaled.jpg": {
+   "label": "sms revo SL",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "47B402AA-51B5-4940-AE7C-ABF2A3324C78-scaled.jpeg": {
+   "label": "sms revo X im Einsatz",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "IMG_0132-scaled.jpeg": {
+   "label": "sms revo X",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "United-in-Dreams-6-scaled.jpg": {
+   "label": "United in Dreams",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "United-in-Dreams-9.jpg": {
+   "label": "United in Dreams",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "United-in-Dreams-7-scaled.jpg": {
+   "label": "United in Dreams",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Teilnehmer-United-in-Dreams_PARAVAN.jpg": {
+   "label": "Teilnehmer United in Dreams",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "Gewinner-Finale-United-in-Dreams_PARAVAN.jpg": {
+   "label": "Gewinner Finale United in Dreams",
+   "size": [
+    1600,
+    1000
+   ]
+  },
+  "United-in-Dreams-2.jpg": {
+   "label": "United in Dreams",
+   "size": [
+    1600,
+    1000
+   ]
+  }
+ },
+ "mark": {
+  "SchmidtMotorsport.png": {
+   "label": "Schmidt Motorsport",
+   "sub": "LOGO-PLATZHALTER",
+   "size": [
+    1200,
+    420
+   ]
+  },
+  "sms-logo.png": {
+   "label": "sms engineering",
+   "sub": "LOGO-PLATZHALTER",
+   "size": [
+    560,
+    150
+   ]
+  },
+  "ZertLogo-9001-vektor.png": {
+   "label": "DIN EN ISO 9001",
+   "sub": "ZERTIFIKAT",
+   "size": [
+    480,
+    480
+   ]
+  }
+ },
+ "bg": {
+  "home": "Fertigung · CNC-Bauteil",
+  "aktuelles": "Newsroom",
+  "unternehmen": "Unternehmen",
+  "ueber-uns": "sms engineering, Cadolzburg",
+  "historie": "Schmidt Motorsport · Rallyesport",
+  "engineering": "Engineering · Konstruktion",
+  "e-mobilitaet": "E-Mobilität · Antriebsstrang",
+  "konstruktion": "Konstruktion · CAD",
+  "lehren": "Messmittelbau · Vorrichtung",
+  "sicherheitszellen": "Sicherheitszelle · Stützgestell",
+  "fertigung": "Fertigung · Maschinenpark",
+  "messen": "Messtechnik · COORD3",
+  "elektro-kart": "Elektro-Kart · Parcours",
+  "revo-sl": "sms revo SL",
+  "revo-x": "sms revo X · eBuggy",
+  "spacedrive": "sms revo SpaceDrive",
+  "bestellformulare": "Bestellformular",
+  "dokumente": "Dokumente",
+  "impressum": "Rechtliches",
+  "cta": "sms engineering, Cadolzburg"
+ }
+}

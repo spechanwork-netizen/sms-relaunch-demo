@@ -474,11 +474,86 @@ Kasten „Direkt erreichen" neben dem Formular. Nur die Handlungsaufforderungen
 wurden umgehängt. Das Skript dazu ist `build/anfragen.py` und mehrfach
 ausführbar.
 
+## Umbau vom 16.11.2026
+
+Siebzehn Änderungen in einem Durchgang. Die Website hat weiterhin **20 Seiten**,
+aber eine andere Struktur.
+
+### Startseite
+
+Neuer Bildkopf (die DMG MORI DMF 200 | 8 in der eigenen Halle), daneben das
+helle Logo, neue Überschrift „Flexibilität. Präzision. Zuverlässigkeit." und
+drei Knöpfe: **Fertigungs-Portfolio**, **Elektro-Kart**, **Kart-Shop** (letzterer
+auf `shop.sms.gmbh`, neuer Tab). Die Leistungssektion heißt jetzt „Vier
+Bereiche, eine Einheit", die Spalte „Messen & Prüfen" heißt
+„Qualitätsmanagement". Die beiden Panels zu Fertigung und E-Slalom-Kart sind
+raus, das Anfrage-Band trägt neuen Text.
+
+Das helle Logo (`assets/img/sms-logo-hell.png`) ist nicht das aus der
+Kopfleiste: Dort sitzt die dunkle Fassung auf weißem Grund, im Bildkopf braucht
+es die weiße. Beide entstehen in `build/einsetzen.py`, die helle über den Modus
+`hell` aus der großen dunklen Vorlage.
+
+### Engineering: aus vier Seiten wird eine
+
+Die Unterseiten sind aufgelöst. `build/engineering-panels.py` holt den Inhalt
+von Konstruktion, Lehren- und Messmittelbau sowie Sicherheitszellen als drei
+Panels auf `engineering.html`, setzt die Überschriften eine Stufe tiefer
+(h1→h2, h2→h3, h3→h4) und löscht die Quelldateien. **E-Mobilität entfällt
+ersatzlos**, „Sicherheitszellen und Stützgestelle" heißt jetzt
+**„Prüfstands- und Sonderanlagen"**. Über den Panels steht eine Sprungleiste.
+
+Der Panel-Inhalt ist der alte: Er beschreibt weiterhin Sicherheitszellen und
+Stützgestelle. Für den neuen Namen braucht es irgendwann neuen Text.
+
+### Fertigung: vier neue Unterseiten
+
+`build/fertigung-unterseiten.py` erzeugt **CNC-Fräsen, Drehen, Schweißen und
+Blechbearbeitung** und setzt die vier Panels auf die Hauptseite. Die Texte sind
+ein **Entwurf** — gebaut aus dem, was auf der Website schon belegt ist
+(DMF 200 | 8, Werkstoffe, Vorrichtungsbau, Losgröße 1). Keine erfundenen
+Maschinendaten, Toleranzen oder Zertifikate, und außer dem vorhandenen
+Maschinenfoto keine Bilder.
+
+### Messen & QM
+
+Menü, Seitentitel und Überschrift heißen jetzt „Messen & QM" bzw. „Messen und
+Qualitätsmanagement", „Maschine 1" wurde zu „Maschine" — es gibt nur eine.
+Der Dateiname bleibt `messen.html`, damit bestehende Links weiter funktionieren.
+
+### Über uns und Historie
+
+Neues Teamfoto im Panoramaformat (1800 × 701, **nicht beschnitten** — ein
+Beschnitt hätte Leute abgeschnitten; dafür gibt es in `einsetzen.py` den Modus
+`voll`), neuer Text in zwei Absätzen mit Link auf die Historie, und unter den
+drei Spalten ein Band mit **Flexibilität · Präzision · Zielstrebigkeit ·
+Zuverlässigkeit** im selben Stil wie die Messbereiche auf der QM-Seite.
+
+Die Historie heißt jetzt „Schmidt Motor Sport", die Chronik reicht von 1977 bis
+1998 und hat acht neue Kacheln von 1986 bis 1998 bekommen.
+
+### Mitgezogen
+
+* „Zertifizierte Schweißfertigung" heißt überall „Individuelle
+  Schweißfertigung" — die Zertifizierungsaussage stand an drei Stellen.
+* Die Navigation wird jetzt von `build/menue.py` geschrieben, nicht mehr von
+  `build_part1.py`: Engineering ohne Untermenü, Fertigung mit vier
+  Unterpunkten, „Messen & QM" statt „Messen & Prüfen", gleiches im Mobilmenü
+  und in der Fußleisten-Spalte „Bereiche".
+* Die Themenliste des Kontaktformulars wurde nachgezogen.
+* 15 Bilddateien waren nach dem Umbau verwaist und sind entfernt
+  (`build/aufraeumen.py`).
+* `build/check-nav.js` prüfte einen Mobilmenü-Klick auf `lehren.html` — diese
+  Seite gibt es nicht mehr, der Prüflauf zeigt jetzt auf `fraesen.html`.
+
+Alle fünf Prüfläufe ohne Befund: 905 interne Verweise ohne toten Link, Bewegung,
+Navigation, Audit, Kontrast im Bildkopf.
+
 ## Geprüft
 
 Alle 20 Seiten in Chromium: HTTP 200, keine JavaScript-Fehler, keine
 Konsolenfehler, genau ein `<h1>`, kein horizontales Überlaufen bei 390, 900,
-1159, 1160 und 1440 px, 903 interne Verweise ohne einen einzigen toten Link,
+1159, 1160 und 1440 px, 905 interne Verweise ohne einen einzigen toten Link,
 kein fehlendes Bild. Umschaltpunkt der Navigation und Mobilmenü inklusive
 Esc-Taste und Scroll-Sperre geprüft.
 
