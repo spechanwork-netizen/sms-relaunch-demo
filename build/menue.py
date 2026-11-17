@@ -64,8 +64,12 @@ def mobil(aktiv):
                          f'<span class="t-label mnav__head">{text}</span>{zeilen}</div>')
         else:
             teile.append(f'<div class="mnav__block"><a class="t-title-md" href="{datei}"{cur(datei)}>{text}</a></div>')
-    teile.append('<a class="ds-btn ds-btn--primary mnav__cta" href="kontakt.html">Kontakt aufnehmen</a>')
-    return '<div class="mnav" id="mobilmenue" hidden>' + "".join(teile) + '</div>'
+    # Der Shop-Knopf steht oben, die Bloecke dazwischen kommen in einen
+    # eigenen Container - der traegt auf dem Tablet den Mehrspaltensatz.
+    shop, bloecke = teile[0], teile[1:]
+    return ('<div class="mnav" id="mobilmenue" hidden>' + shop
+            + '<div class="mnav__spalten">' + "".join(bloecke) + '</div>'
+            + '<a class="ds-btn ds-btn--primary mnav__cta" href="kontakt.html">Kontakt aufnehmen</a></div>')
 
 
 def bereiche():

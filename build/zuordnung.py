@@ -80,7 +80,8 @@ HINTERGRUND = {
     "sicherheitszellen": ("sicherheitszellen_banner.jpg",   .50, .50, 1.0),
     "fertigung":        ("Fraese-gross-01.png",             .40, .50, 0.80),
     "messen":           ("Fertigteil.jpg",                  .50, .50, 1.0),
-    "elektro-kart":     ("Hintergrund-leomax-01.png",       .50, .50, 1.0),
+    # gleiches Motiv wie die Unterseite sms revo SL
+    "elektro-kart":     ("E-Kart-sms-engineering.jpg",      .50, .52, 1.0),
     "revo-sl":          ("E-Kart-sms-engineering.jpg",      .50, .52, 1.0),
     "revo-x":           ("Kart-Aufnahme.jpg",               .50, .50, 1.0),
     "spacedrive":       ("20210813_DMSB_EKart-0258_50.jpg", .50, .50, 1.0),

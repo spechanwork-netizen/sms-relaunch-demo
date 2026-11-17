@@ -549,6 +549,92 @@ Die Historie heißt jetzt „Schmidt Motor Sport", die Chronik reicht von 1977 b
 Alle fünf Prüfläufe ohne Befund: 905 interne Verweise ohne toten Link, Bewegung,
 Navigation, Audit, Kontrast im Bildkopf.
 
+## Inhalte der Kart- und Fertigungsseiten (17.11.2026)
+
+Der Kunde hat die echten Texte geliefert. Damit sind die Entwürfe von gestern
+auf den vier Fertigungs-Unterseiten ersetzt:
+
+| Seite | Inhalt |
+|---|---|
+| CNC-Fräsen | Maschinenpark (DMG 63 V, DMF 200/8, CMX 70 U), Werkstoffe, Bearbeitungsbereich als Kennzahlenband, CAM-Software |
+| Drehen | Präzisionsdrehteile, GDW L2400 VS1, Partnernetzwerk für CNC-Dreharbeiten |
+| Schweißen | sechs Panels: Werkstoffe, Verfahren, Schweißkonstruktionen, Dreh-Fräs-Schweiß-Baugruppen, Halbzeuge, Nachbearbeitung |
+| Blechbearbeitung | Werkstoffe mit Materialstärken, vier Maschinen mit Kennwert, Verfügbarkeiten |
+
+**Die Schweißverfahren** stehen im selben Kennzahlenband wie die Messbereiche
+auf der QM-Seite: WIG (141), MIG (131), MAG (135) und Punktschweißen (21), je
+mit einer kurzen Angabe, wofür das Verfahren taugt. Ein erster Entwurf hatte
+zusätzlich eine Liste mit längeren Erklärungen darunter — die wiederholte nur
+dasselbe und ist wieder raus.
+
+**Ein Widerspruch bleibt:** Auf `fertigung.html` steht weiterhin, die
+DMF 200 | 8 bearbeite Bauteile bis 2.300 × 850 × 900 mm (so stand es im
+Design-Export). Die neue Fräsen-Seite nennt als Bearbeitungsbereich
+2.000 × 800 × 750 mm. Beide Zahlen können stimmen — die eine für die Maschine,
+die andere für die Fertigung insgesamt —, aber nebeneinander wirkt es
+inkonsistent. Bitte einmal festlegen.
+
+### Elektro-Kart, revo SL, revo X, SpaceDrive
+
+Die Sektion „Vorteile und technischer Aufbau" ist von der Übersichtsseite auf
+`revo-sl.html` umgezogen und dort um drei Kacheln gewachsen
+(Allwettertauglich, Höchste Qualität, Top Preis-Leistungsverhältnis). Die
+Übersichtsseite trägt neuen Einleitungstext, die ersten beiden Modellkarten
+vorläufig dasselbe Foto. Auf `revo-sl.html` sind die Kennzahlen zur Premiere
+2022 und die Sektion „Kartslalom-Profis testen sms eKarts" entfallen.
+
+`spacedrive.html` ist komplett neu: zwei Panels („Das Kart", „Die Events"), der
+Absatz zur Teilhabe als hervorgehobener Block mit roter Kante, das erste Foto
+der früheren Impressionen als dekoratives Element daneben.
+
+**Ein Fehler auf dem Weg:** Das erste Skript für die Fertigungsseiten schrieb
+`vorher + neu` nicht zusammen, sondern nur den Rumpf — die vier Seiten
+verloren Dokumentkopf, Kopfleiste und Mobilmenü. Gefunden hat das die
+Verschachtelungsprüfung, nicht das Auge; die Seiten wurden neu erzeugt.
+
+Alle fünf Prüfläufe ohne Befund.
+
+## Mobile first: gemessen und nachgebessert (17.11.2026)
+
+Geprüft wurde nicht nach Augenmaß, sondern mit `build/mobil.js`: alle 20 Seiten
+bei **360, 390, 768 und 1024 px** Breite, dazu Kopfleiste, Mobilmenü, Formular
+und Fußbereich einzeln vermessen. Gesucht wurde nach seitlichem Überlauf, zu
+kleinen Tippzielen, zu kleiner Schrift und hochskalierten Bildern.
+
+**Schon vorher in Ordnung:** kein horizontaler Überlauf auf keiner Seite und
+keiner Breite, kein hochskaliertes Bild, Burger-Knopf 48 × 48 px,
+Formularfelder 43–48 px hoch, Mobilmenü scrollbar mit 42–54 px hohen Einträgen.
+
+**Erster Lauf: 84 verschiedene Befunde.** Behoben:
+
+| Befund | vorher | jetzt |
+|---|---|---|
+| Verweise im Fußbereich | 17–22 px hoch | 44 px Mindesthöhe |
+| Soziale Netzwerke im Fußbereich | 13 px Schrift | 14 px, 44 px hoch |
+| Karten-Verweise („Mehr erfahren") | 17 px hoch | 44 px Mindesthöhe |
+| Ankreuzfeld der Zustimmung | 20 × 20 px | 28 × 28 px |
+| Telefon und E-Mail im Fließtext | 15–17 px Trefferfläche | 12 px Polsterung oben und unten |
+
+**Letzter Lauf: 23 Befunde**, alle von derselben Art — Verweise mitten in einem
+Satz („Kontaktformular", „Schmidt Motor Sport", „United in Dreams"). Die
+Richtlinie zur Zielgröße (WCAG 2.5.8) nimmt genau die aus: Sie gehören in die
+Zeile, und sie dort aufzublähen würde den Satz zerreißen.
+
+### Zwei Fehler, die nur auf dem Tablet auffielen
+
+1. **Das Mobilmenü passte nicht aufs Tablet.** In einer Spalte war die Liste
+   1.358 px hoch und musste auch auf einem 1.024 px hohen Gerät gescrollt
+   werden. Der erste Versuch mit einem zweispaltigen Raster war schlechter als
+   vorher: Im Raster ist jede Zeile so hoch wie ihr größter Block, neben
+   „Start" klaffte ein Loch von 300 px. Jetzt trägt ein eigenes Element
+   (`.mnav__spalten`) echten Mehrspaltensatz — der füllt fortlaufend. Ergebnis
+   auf 768 × 1024: **948 px, passt ohne Scrollen**.
+2. **Große Tablets bekamen das Mausmenü.** Der Umschaltpunkt lag allein bei
+   1.160 px Breite. Ein iPad Pro im Querformat ist breiter — dort klappten die
+   Untermenüs über `:hover` auf, und ein Tipp auf einen Elternpunkt sprang auf
+   dessen Seite, statt das Untermenü zu öffnen. Der Umschaltpunkt gilt jetzt
+   zusätzlich für `(pointer: coarse)`, also für jedes Gerät ohne Maus.
+
 ## Geprüft
 
 Alle 20 Seiten in Chromium: HTTP 200, keine JavaScript-Fehler, keine

@@ -109,8 +109,12 @@ h1, h2, h3, h4, p, ul { margin: 0; }
 .burger__bars::before { position: absolute; top: -7px; }
 .burger__bars::after  { position: absolute; top: 7px; }
 
-/* Umschaltpunkt: unter 1160px passt die Leiste nicht mehr in eine Zeile */
-@media (max-width: 1159px) {
+/* Umschaltpunkt: unter 1160px passt die Leiste nicht mehr in eine Zeile.
+   Auf Geraeten ohne Maus gilt dasselbe unabhaengig von der Breite: Die
+   Untermenues klappen ueber :hover und :focus-within auf, und ein Tipp auf
+   einen Elternpunkt springt dort auf dessen Seite, statt das Untermenue zu
+   oeffnen. Ein grosses Tablet bekommt deshalb das Mobilmenue. */
+@media (max-width: 1159px), (pointer: coarse) {
   .nav { display: none; }
   .burger { display: flex; }
 }
@@ -130,6 +134,20 @@ h1, h2, h3, h4, p, ul { margin: 0; }
 .mnav [aria-current="page"] { color: var(--primary); font-weight: 600; }
 .mnav__cta { justify-content: center; }
 body.mnav-open { overflow: hidden; }
+/* Mobilmenue auf dem Tablet: zwei Spalten. In einer Spalte war die Liste
+   1.358 px hoch und musste auch auf einem 1.024 px hohen Tablet gescrollt
+   werden. Ein Raster taugt dafuer nicht - dort ist jede Zeile so hoch wie ihr
+   groesster Block, und neben "Start" klaffte ein Loch von 300 px. Echter
+   Mehrspaltensatz fuellt die Spalten dagegen fortlaufend. Er steht in einem
+   eigenen Element, weil die Hoehe dort vom Inhalt kommt; auf dem scrollenden
+   .mnav wuerde er seitlich auslaufen. */
+.mnav__spalten { display: flex; flex-direction: column; gap: 28px; }
+@media (min-width: 600px) {
+  .mnav__spalten { display: block; columns: 2; column-gap: clamp(32px, 6vw, 72px); }
+  .mnav__block { break-inside: avoid; margin-bottom: 28px; }
+  .mnav__block:last-child { margin-bottom: 0; }
+}
+
 
 /* --- Parallax ------------------------------------------------------------ */
 /* Ein Hintergrundbild je Seite. background-attachment:fixed erzeugt den
@@ -308,6 +326,31 @@ main div:has(> .ds-card) { gap: clamp(24px, 3.2vw, 44px) !important; }
 .site-footer__social { display: flex; gap: 24px; flex-wrap: wrap; }
 .site-footer__social a { color: var(--muted); }
 .site-footer__social a:hover { color: var(--primary); }
+
+/* --- Touch-Bedienung ------------------------------------------------------ */
+/* Auf Geraeten ohne Maus muss jedes Ziel mit dem Daumen treffbar sein.
+   Gemessen waren die Verweise im Fussbereich 17-22 px hoch und die
+   Karten-Verweise 17 px - zu wenig fuer einen Daumen. 44 px ist der uebliche
+   Richtwert. Verweise mitten im Fliesstext bleiben ausgenommen: Sie gehoeren
+   in die Zeile, und die Richtlinie nimmt sie ausdruecklich aus. */
+@media (max-width: 1159px), (pointer: coarse) {
+  .fcol a,
+  .site-footer__social a,
+  main .ds-link {
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
+  .fcol { gap: 4px; }
+  .fcol h2 { margin-bottom: 8px; }
+  /* 13 px sind auf dem Handy zu klein zum Lesen */
+  .site-footer__social a { font-size: 14px; }
+  /* Telefon- und E-Mail-Verweise im Kontaktkasten stehen in der Zeile -
+     die Polsterung vergroessert die Trefferflaeche, ohne den Zeilenfall
+     zu veraendern. */
+  main a[href^="tel:"], main a[href^="mailto:"] { padding: 12px 0; }
+  /* Ankreuzfeld fuer die Zustimmung */
+  .kform__zustimmung { grid-template-columns: 28px 1fr; }
+  .kform__zustimmung input { width: 28px; height: 28px; margin-top: 0; }
+}
 
 /* --- Rechtsseiten -------------------------------------------------------- */
 .legal { padding: clamp(48px, 7vw, 80px) clamp(20px, 4vw, 32px); }
