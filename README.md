@@ -635,6 +635,31 @@ Zeile, und sie dort aufzublähen würde den Satz zerreißen.
    dessen Seite, statt das Untermenü zu öffnen. Der Umschaltpunkt gilt jetzt
    zusätzlich für `(pointer: coarse)`, also für jedes Gerät ohne Maus.
 
+## Impressum und Datenschutzerklärung (17.11.2026)
+
+Beide Rechtsseiten tragen jetzt die vom Kunden gelieferten Texte statt der
+Platzhalter. Gesetzt von `build/rechtsseiten.py`, wörtlich übernommen —
+ergänzt sind nur Struktur (Überschriften, Absätze, Listen) und klickbare
+Telefon- und E-Mail-Verweise.
+
+* **Impressum:** Angaben nach § 5 DDG, Handelsregister HRB 8473, Vertretung,
+  Kontakt, Umsatzsteuer-ID, Streitschlichtung, Haftung für Inhalte und Links,
+  Urheberrecht.
+* **Datenschutzerklärung:** vier Abschnitte von „Datenschutz auf einen Blick"
+  bis „Datenerfassung auf dieser Website", inklusive Hoster IONOS,
+  Datenschutzbeauftragtem und den beiden in Großbuchstaben gesetzten
+  Widerspruchs-Absätzen nach Art. 21 DSGVO. Die Überschrift der Seite heißt
+  jetzt „Datenschutzerklärung"; im Menü bleibt sie kurz „Datenschutz".
+
+**Ein Widerspruch zum Seiteninhalt, der aufgelöst werden muss:** Die
+Datenschutzerklärung sagt, es würden „keine Inhalte von Drittanbietern
+(z. B. Schriftarten, Karten oder Videos) eingebunden". Für Schriften und
+Analyse stimmt das — die Archivo ist selbst gehostet, Tracking gibt es keines.
+Auf `engineering.html` steckt aber im Panel „Prüfstands- und Sonderanlagen"
+eine **YouTube-Einbettung** (`youtube-nocookie.com`). Die baut beim Abspielen
+eine Verbindung zu Google auf. Entweder fliegt das Video raus, oder es bekommt
+eine Zwei-Klick-Lösung und die Erklärung einen Absatz dazu.
+
 ## Geprüft
 
 Alle 20 Seiten in Chromium: HTTP 200, keine JavaScript-Fehler, keine
