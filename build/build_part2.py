@@ -593,6 +593,7 @@ SITE_JS = """/* sms engineering — Website
     toTop(false);
     requestAnimationFrame(function () { toTop(false); });
   }
+
   window.addEventListener('pageshow', applyTop);
   applyTop();
 

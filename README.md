@@ -651,14 +651,44 @@ Telefon- und E-Mail-Verweise.
   Widerspruchs-Absätzen nach Art. 21 DSGVO. Die Überschrift der Seite heißt
   jetzt „Datenschutzerklärung"; im Menü bleibt sie kurz „Datenschutz".
 
-**Ein Widerspruch zum Seiteninhalt, der aufgelöst werden muss:** Die
-Datenschutzerklärung sagt, es würden „keine Inhalte von Drittanbietern
-(z. B. Schriftarten, Karten oder Videos) eingebunden". Für Schriften und
-Analyse stimmt das — die Archivo ist selbst gehostet, Tracking gibt es keines.
-Auf `engineering.html` steckt aber im Panel „Prüfstands- und Sonderanlagen"
-eine **YouTube-Einbettung** (`youtube-nocookie.com`). Die baut beim Abspielen
-eine Verbindung zu Google auf. Entweder fliegt das Video raus, oder es bekommt
-eine Zwei-Klick-Lösung und die Erklärung einen Absatz dazu.
+**Der Widerspruch zur YouTube-Einbettung ist aufgelöst:** Das Panel
+„Prüfstands- und Sonderanlagen" ist am 18.11. samt Video von der
+Engineering-Seite genommen worden (`build/pruefstand-raus.py`). Damit bindet
+die Website keine Inhalte von Drittanbietern mehr ein, und der Satz in der
+Datenschutzerklärung stimmt wieder wörtlich.
+
+Zwischendurch war eine **Zwei-Klick-Lösung** gebaut — Platzhalter aus reinem
+CSS, kein Vorschaubild von YouTube (das käme selbst von Google), iframe erst
+beim Klick; im Browser nachgemessen: null Fremdanfragen vorher, eine nachher.
+Sie ist mit dem Panel wieder entfallen, samt CSS, JavaScript und dem Abschnitt,
+der dafür in die Datenschutzerklärung gekommen war.
+
+Die Engineering-Seite hat damit noch **zwei** Panels, der Bildkopf spricht
+entsprechend von zwei Kompetenzfeldern.
+
+## Textrunde vom 18.11.2026
+
+Nur Inhalt, keine Technik — erledigt von `build/texte-18-11.py`:
+
+* **Über uns:** Das Stichwortband „Was uns ausmacht" steht jetzt **über** den
+  drei Spalten statt darunter.
+* **Historie:** Die Kachel „1993 / 1994" ist entfallen, dafür steht vor 1993
+  eine neue Kachel **1992** (Golf A59 für die Rallye-WM im Auftrag von
+  Volkswagen). Die Chronik läuft damit 1977 · 1979 – 1984 · 1986 – 1988 ·
+  1990 · 1992 · 1993 · 1994 · 1997/1998.
+* **Fertigung:** Titel „Individuell. Präzise. Zuverlässig.", „im selben Haus"
+  → „unter einem Dach", der Stichpunkt zur Messplatte ist raus, die
+  Überschrift „Qualitätskontrolle" hat die Größe von „Montage" bekommen, und
+  die DMF 200 | 8 bearbeitet laut Text jetzt Bauteile bis **2.000 mm** statt
+  2.300 mm — damit stimmt sie mit der Fräsen-Seite überein. Der Widerspruch,
+  der hier seit dem 17.11. offen stand, ist damit aufgelöst.
+* **Engineering:** Titel „Entwicklung. Innovation. Qualität." mit neuem
+  Untertitel, die Sprungleiste ist entfallen, „Serien- und
+  Motorsportanwendungen" heißt jetzt „Vorserien-, Anlagen- und
+  Motorsportanwendungen", beide Kachelzeilen (Gesamtfahrzeuge/Komponenten/
+  Werkzeuge sowie Messvorrichtung/Prüfvorrichtung/Dynamische Messvorrichtung)
+  sind raus, die Stichpunkte der Konstruktion und die beiden Spaltentexte beim
+  Messmittelbau sind ersetzt.
 
 ## Geprüft
 
