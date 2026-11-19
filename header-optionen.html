@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drei Entwürfe für den Kopfbereich</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  :root { --rand: clamp(20px, 4vw, 48px); }
+  body { margin: 0; background: var(--canvas); }
+  .vgl__kopf { padding: clamp(40px, 6vw, 72px) var(--rand) clamp(24px, 3vw, 36px); max-width: 900px; }
+  .vgl__marke {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 20px;
+    padding: 14px var(--rand); background: var(--surface-dark); color: var(--on-dark);
+    border-bottom: 3px solid var(--primary);
+  }
+  .vgl__marke b { font-family: var(--font-display); font-size: 17px; letter-spacing: -.2px; }
+  .vgl__marke span { color: var(--on-dark-soft); font-size: 14px; }
+  .vgl__notiz { padding: 20px var(--rand) clamp(44px, 5vw, 64px); max-width: 860px; }
+  .vgl__notiz ul { margin: 10px 0 0; padding-left: 18px; color: var(--body); line-height: 1.6; }
+  .vgl__notiz li { margin-bottom: 6px; }
+  .vgl__hinweis {
+    margin: 0 var(--rand) 0; padding: 10px 14px; background: var(--surface-soft);
+    border-left: 3px solid var(--primary); color: var(--body);
+    font-family: var(--font-body); font-size: 14px;
+  }
+
+  /* ---------- Vorschaukasten: echtes Scrollen in einem Fenster ---------- */
+  .demo {
+    position: relative; height: 520px; overflow-y: auto; overflow-x: hidden;
+    border: 1px solid var(--hairline); margin: 14px var(--rand) 0;
+    background: var(--canvas);
+  }
+  .demo__bild {
+    height: 400px; background-image: url("assets/img/bg/home.jpg");
+    background-size: cover; background-position: center 58%;
+    display: flex; align-items: flex-end; padding: 28px;
+  }
+  .demo__bild p { margin: 0; color: #fff; font-family: var(--font-display);
+                  font-weight: 700; font-size: 30px; letter-spacing: -.8px;
+                  text-shadow: 0 2px 20px rgba(0,0,0,.6); }
+  .demo__text { padding: 28px; display: grid; gap: 14px; }
+  .demo__text p { margin: 0; color: var(--body); max-width: 60ch; }
+  .demo__balken { height: 220px; background: var(--surface-soft); }
+
+  /* ---------- Gemeinsame Bausteine der drei Kopfbereiche ---------- */
+  .k { position: sticky; top: 0; z-index: 20; }
+  .k__innen {
+    max-width: var(--container-max); margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px); display: flex; align-items: center;
+    gap: clamp(14px, 2vw, 34px);
+  }
+  .k__marke { display: flex; align-items: center; flex: none; padding: 8px 0; }
+  .k__marke img { width: auto; display: block; transition: height .3s ease; }
+  .k__nav { display: flex; align-items: center; gap: clamp(12px, 1.6vw, 26px); margin-left: auto; }
+  .k__link {
+    position: relative; font-family: var(--font-display); font-size: 15px;
+    font-weight: 500; text-decoration: none; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .k__chev { font-size: 14px; transform: rotate(90deg); display: inline-block; }
+  .k__knopf {
+    font-family: var(--font-display); font-weight: 700; font-size: 13px;
+    letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+    padding: 13px 21px; box-sizing: border-box; white-space: nowrap;
+    transition: background-color .3s cubic-bezier(.22,.61,.36,1), color .3s cubic-bezier(.22,.61,.36,1);
+  }
+  /* Der Kart-Shop ist in allen drei Entwürfen derselbe: durchsichtig,
+     rote Kante. Nur die Schriftfarbe richtet sich nach dem Untergrund. */
+  .k__shop { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+  .k__shop:hover, .k__shop:focus-visible { background: var(--primary); color: #fff; }
+  .k__kontakt { background: var(--surface-dark); color: #fff; border: 1px solid var(--surface-dark); }
+  .k__kontakt:hover, .k__kontakt:focus-visible { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  /* Klappmenü, gemeinsam für A und B */
+  .k__gruppe { position: relative; display: flex; align-items: center; align-self: stretch; }
+  .k__klapp {
+    position: absolute; top: 100%; left: -16px; min-width: 290px;
+    background: var(--canvas); border: 1px solid var(--hairline);
+    border-top: 3px solid var(--primary); padding: 8px 0;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden; transform: translateY(-4px);
+    transition: opacity .16s ease, transform .16s ease, visibility .16s;
+  }
+  .k__gruppe:hover .k__klapp, .k__gruppe:focus-within .k__klapp { opacity: 1; visibility: visible; transform: none; }
+  .k__klapp a { color: var(--ink); padding: 11px 20px; text-decoration: none;
+                font-family: var(--font-display); font-size: 15px; }
+  .k__klapp a:hover { color: var(--primary); background: var(--surface-soft); }
+
+  /* ============ A — Servicezeile ============ */
+  .kopf-a__service {
+    background: var(--surface-dark); color: var(--on-dark-soft);
+    height: 40px; overflow: hidden;
+    transition: height .3s cubic-bezier(.22,.61,.36,1);
+  }
+  .kopf-a__service .k__innen { height: 40px; gap: 26px; }
+  .kopf-a__service a, .kopf-a__service span {
+    color: var(--on-dark-soft); text-decoration: none;
+    font-family: var(--font-body); font-size: 13px; white-space: nowrap;
+  }
+  .kopf-a__service a:hover { color: #fff; }
+  .kopf-a__service .k__rechts { margin-left: auto; display: flex; gap: 22px; }
+  .kopf-a__haupt {
+    background: var(--canvas); border-bottom: 1px solid var(--hairline);
+    transition: box-shadow .3s ease;
+  }
+  .kopf-a__haupt .k__innen { min-height: 76px; transition: min-height .3s cubic-bezier(.22,.61,.36,1); }
+  .kopf-a .k__marke img { height: 48px; }
+  .kopf-a .k__link { color: var(--ink); }
+  .kopf-a .k__link:hover { color: var(--primary); }
+  .kopf-a.ist-gescrollt .kopf-a__service { height: 0; }
+  .kopf-a.ist-gescrollt .kopf-a__haupt .k__innen { min-height: 58px; }
+  .kopf-a.ist-gescrollt .k__marke img { height: 36px; }
+  .kopf-a.ist-gescrollt .kopf-a__haupt { box-shadow: 0 6px 22px rgba(0,0,0,.10); }
+
+  /* ============ B — Über dem Bild ============ */
+  .kopf-b {
+    background: transparent; border-bottom: 1px solid rgba(255,255,255,.20);
+    transition: background-color .3s ease, border-color .3s ease, backdrop-filter .3s ease;
+  }
+  /* Ohne diesen Schleier ist die Navigation auf hellen Stellen des Fotos
+     nicht lesbar - weisse Schrift allein reicht auf einem Industriefoto
+     nicht. Er verschwindet, sobald die Leiste dunkel wird. */
+  .kopf-b::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; bottom: -44px; z-index: -1;
+    pointer-events: none; transition: opacity .3s ease;
+    background: linear-gradient(180deg, rgba(10,14,18,.74) 0%, rgba(10,14,18,.48) 56%, rgba(10,14,18,0) 100%);
+  }
+  .kopf-b.ist-gescrollt::before { opacity: 0; }
+  .kopf-b .k__innen { min-height: 80px; transition: min-height .3s cubic-bezier(.22,.61,.36,1); }
+  .kopf-b .k__marke img { height: 46px; }
+  .kopf-b .k__link { color: #fff; }
+  /* Roter Strich, der beim Überfahren aufzieht - auf Weiß wäre er zu laut,
+     auf dem Bild ist er genau richtig. */
+  .kopf-b .k__link::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+    background: var(--primary); transform: scaleX(0); transform-origin: left;
+    transition: transform .28s cubic-bezier(.22,.61,.36,1);
+  }
+  .kopf-b .k__link:hover::after, .kopf-b .k__gruppe:hover .k__link::after { transform: scaleX(1); }
+  /* Rot auf dunklem Grund kommt als Schriftfarbe nur auf 3:1 - die Kante
+     bleibt rot, die Beschriftung wird weiß. */
+  .kopf-b .k__shop { color: #fff; }
+  .kopf-b .k__kontakt { background: var(--primary); border-color: var(--primary); }
+  .kopf-b .k__kontakt:hover { background: var(--primary-active); border-color: var(--primary-active); }
+  .kopf-b.ist-gescrollt { background: rgba(22, 28, 35, .95); border-bottom-color: rgba(255,255,255,.12); }
+  .kopf-b.ist-gescrollt .k__innen { min-height: 62px; }
+  .kopf-b.ist-gescrollt .k__marke img { height: 38px; }
+  .kopf-b .k__klapp { background: var(--surface-dark); border-color: rgba(255,255,255,.14); }
+  .kopf-b .k__klapp a { color: #fff; }
+  .kopf-b .k__klapp a:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+  /* ============ C — Breites Klappmenü ============ */
+  .kopf-c { background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+  .kopf-c .k__innen { min-height: 76px; position: static; }
+  .kopf-c .k__marke img { height: 48px; }
+  .kopf-c .k__link { color: var(--ink); }
+  .kopf-c .k__link::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -26px; height: 3px;
+    background: var(--primary); transform: scaleX(0); transform-origin: left;
+    transition: transform .28s cubic-bezier(.22,.61,.36,1);
+  }
+  .kopf-c .k__gruppe:hover .k__link::after, .kopf-c .k__link:hover::after { transform: scaleX(1); }
+  .kopf-c .k__gruppe { position: static; }
+  .kopf-c__mega {
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--canvas); border-top: 3px solid var(--primary);
+    box-shadow: 0 18px 40px rgba(0,0,0,.14);
+    padding: 26px clamp(16px, 3vw, 32px) 30px;
+    opacity: 0; visibility: hidden; transform: translateY(-6px);
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  }
+  .kopf-c .k__gruppe:hover .kopf-c__mega,
+  .kopf-c .k__gruppe:focus-within .kopf-c__mega { opacity: 1; visibility: visible; transform: none; }
+  .kopf-c__raster {
+    max-width: var(--container-max); margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 4px 28px;
+  }
+  .kopf-c__eintrag { display: block; padding: 12px 14px; text-decoration: none; border-left: 2px solid transparent; }
+  .kopf-c__eintrag:hover { background: var(--surface-soft); border-left-color: var(--primary); }
+  .kopf-c__eintrag b { display: block; font-family: var(--font-display); font-size: 15px; color: var(--ink); }
+  .kopf-c__eintrag span { display: block; margin-top: 3px; font-family: var(--font-body);
+                          font-size: 13px; line-height: 1.45; color: var(--muted); }
+  .kopf-c__kopfzeile {
+    max-width: var(--container-max); margin: 0 auto 14px;
+    font-family: var(--font-display); font-size: 12px; font-weight: 700;
+    letter-spacing: 1.6px; text-transform: uppercase; color: var(--muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .k__marke img, .kopf-a__service, .kopf-a__haupt .k__innen, .kopf-b, .kopf-b .k__innen,
+    .k__link::after, .k__klapp, .kopf-c__mega, .k__knopf { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="vgl__kopf">
+  <span class="t-label" style="color: var(--muted)">Kopfbereich</span>
+  <h1 class="t-display-md" style="color: var(--ink); font-size: clamp(26px, 3.4vw, 34px); margin: 10px 0 12px">
+    Drei Entwürfe für den Kopfbereich</h1>
+  <p class="t-body-md" style="color: var(--body)">Jeder Entwurf steckt in einem eigenen Fenster und lässt sich
+    darin <strong>wirklich scrollen</strong> — so sieht man, was beim Scrollen passiert. Klappmenüs öffnen
+    beim Überfahren. Der Kart-Shop-Knopf ist überall derselbe: durchsichtig mit roter Kante.</p>
+</div>
+
+<!-- ============================ A ============================ -->
+<div class="vgl__marke"><b>Entwurf A — Servicezeile</b><span>Schmale dunkle Zeile mit Telefon und E-Mail darüber, fährt beim Scrollen ein</span></div>
+<p class="vgl__hinweis">Im Fenster nach unten scrollen: die Servicezeile fährt ein, die Leiste schrumpft.</p>
+<div class="demo">
+  <header class="k kopf-a" data-kopf>
+    <div class="kopf-a__service">
+      <div class="k__innen">
+        <a href="tel:+499103918490">+49 9103 91849 0</a>
+        <a href="mailto:info@sms.gmbh">info@sms.gmbh</a>
+        <span>Seckendorfer Straße 6, 90556 Cadolzburg</span>
+        <div class="k__rechts"><span>DIN EN ISO 9001</span></div>
+      </div>
+    </div>
+    <div class="kopf-a__haupt">
+      <div class="k__innen">
+        <a class="k__marke" href="#"><img src="assets/img/sms-logo.png" alt="sms engineering GmbH"></a>
+        <nav class="k__nav">
+          <div class="k__gruppe"><a class="k__link" href="#">Unternehmen<span class="k__chev">›</span></a>
+            <div class="k__klapp"><a href="#">Über uns</a><a href="#">Schmidt Motorsport Historie</a></div></div>
+          <a class="k__link" href="#">Engineering</a>
+          <div class="k__gruppe"><a class="k__link" href="#">Fertigung<span class="k__chev">›</span></a>
+            <div class="k__klapp"><a href="#">CNC-Fräsen</a><a href="#">Drehen</a><a href="#">Schweißen</a><a href="#">Blechbearbeitung</a></div></div>
+          <a class="k__link" href="#">Messen &amp; QM</a>
+          <div class="k__gruppe"><a class="k__link" href="#">Elektro-Kart<span class="k__chev">›</span></a>
+            <div class="k__klapp"><a href="#">sms revo SL</a><a href="#">sms revo X</a><a href="#">sms revo SpaceDrive</a><a href="#">Bestellformulare</a><a href="#">Wichtige Dokumente</a></div></div>
+          <a class="k__knopf k__shop" href="#">Kart-Shop</a>
+          <a class="k__knopf k__kontakt" href="#">Kontakt</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <div class="demo__bild"><p>Flexibilität. Präzision. Zuverlässigkeit.</p></div>
+  <div class="demo__text">
+    <p>Weiter unten auf der Seite bleibt nur die geschrumpfte weiße Leiste stehen. Telefonnummer und
+      E-Mail-Adresse sind beim ersten Blick auf die Seite sofort da — ohne dass jemand bis in den
+      Fußbereich scrollen muss.</p>
+  </div>
+  <div class="demo__balken"></div>
+</div>
+<div class="vgl__notiz">
+  <strong class="t-title-md" style="color: var(--ink)">Was das bringt</strong>
+  <ul class="t-body-sm">
+    <li>Telefon, E-Mail und Anschrift stehen über der Falz — der kürzeste Weg zu einer Anfrage, und
+      für einen Zulieferer das Übliche.</li>
+    <li>Beim Scrollen fährt die Servicezeile ein und die Hauptleiste schrumpft von 76 auf 58 Pixel.
+      Das Logo geht von 48 auf 36 Pixel mit.</li>
+    <li>Die Hauptnavigation bleibt genau so, wie sie heute ist — das ist der kleinste Eingriff der drei.</li>
+    <li><em>Preis:</em> 40 Pixel mehr Kopfhöhe beim Seitenstart. Auf dem Handy entfällt die Servicezeile,
+      dort bliebe es beim Brennermenü.</li>
+  </ul>
+</div>
+
+<!-- ============================ B ============================ -->
+<div class="vgl__marke"><b>Entwurf B — Über dem Bild</b><span>Durchsichtig auf dem Bildkopf, wird beim Scrollen zur dunklen Leiste</span></div>
+<p class="vgl__hinweis">Im Fenster nach unten scrollen: aus der durchsichtigen Leiste wird eine dunkle.</p>
+<div class="demo">
+  <header class="k kopf-b" data-kopf>
+    <div class="k__innen">
+      <a class="k__marke" href="#"><img src="assets/img/sms-logo-hell.png" alt="sms engineering GmbH"></a>
+      <nav class="k__nav">
+        <div class="k__gruppe"><a class="k__link" href="#">Unternehmen<span class="k__chev">›</span></a>
+          <div class="k__klapp"><a href="#">Über uns</a><a href="#">Schmidt Motorsport Historie</a></div></div>
+        <a class="k__link" href="#">Engineering</a>
+        <div class="k__gruppe"><a class="k__link" href="#">Fertigung<span class="k__chev">›</span></a>
+          <div class="k__klapp"><a href="#">CNC-Fräsen</a><a href="#">Drehen</a><a href="#">Schweißen</a><a href="#">Blechbearbeitung</a></div></div>
+        <a class="k__link" href="#">Messen &amp; QM</a>
+        <div class="k__gruppe"><a class="k__link" href="#">Elektro-Kart<span class="k__chev">›</span></a>
+          <div class="k__klapp"><a href="#">sms revo SL</a><a href="#">sms revo X</a><a href="#">sms revo SpaceDrive</a><a href="#">Bestellformulare</a><a href="#">Wichtige Dokumente</a></div></div>
+        <a class="k__knopf k__shop" href="#">Kart-Shop</a>
+        <a class="k__knopf k__kontakt" href="#">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+  <div class="demo__bild" style="margin-top: -80px; height: 480px; align-items: flex-end"><p>Flexibilität. Präzision. Zuverlässigkeit.</p></div>
+  <div class="demo__text">
+    <p>Das Bild beginnt ganz oben, die Leiste schwimmt darauf. Sobald der Bildkopf weg ist, legt sich
+      ein dunkler Grund unter die Leiste, damit die Beschriftungen lesbar bleiben.</p>
+  </div>
+  <div class="demo__balken"></div>
+</div>
+<div class="vgl__notiz">
+  <strong class="t-title-md" style="color: var(--ink)">Was das bringt</strong>
+  <ul class="t-body-sm">
+    <li>Der Bildkopf gewinnt 76 Pixel Höhe und beginnt wirklich oben — zusammen mit Entwurf A der
+      Hero-Sektion wirkt das wie ein durchgehendes Bild statt wie ein Bild unter einem Balken.</li>
+    <li>Statt heller Kästen trägt hier das helle Logo, und unter jedem Menüpunkt zieht beim Überfahren
+      ein roter Strich auf.</li>
+    <li>Beim Scrollen wird die Leiste dunkel und schrumpft auf 62 Pixel.</li>
+    <li><em>Zu beachten:</em> Rot als Schriftfarbe käme auf dunklem Grund nur auf 3:1. Die Kante des
+      Kart-Shop-Knopfes bleibt deshalb rot, die Beschriftung wird weiß.</li>
+    <li><em>Preis:</em> Auf jeder Unterseite muss der Bildkopf oben dunkel genug sein. Das ist er
+      heute schon, aber es ist eine Bedingung, die bei jedem neuen Motiv geprüft werden muss.</li>
+  </ul>
+</div>
+
+<!-- ============================ C ============================ -->
+<div class="vgl__marke"><b>Entwurf C — Breites Klappmenü</b><span>Weiße Leiste wie heute, aber die Untermenüs öffnen über die ganze Breite</span></div>
+<p class="vgl__hinweis">Im Fenster auf „Fertigung" oder „Elektro-Kart" zeigen.</p>
+<div class="demo">
+  <header class="k kopf-c" data-kopf>
+    <div class="k__innen">
+      <a class="k__marke" href="#"><img src="assets/img/sms-logo.png" alt="sms engineering GmbH"></a>
+      <nav class="k__nav">
+        <div class="k__gruppe"><a class="k__link" href="#">Unternehmen<span class="k__chev">›</span></a>
+          <div class="kopf-c__mega">
+            <div class="kopf-c__kopfzeile">Unternehmen</div>
+            <div class="kopf-c__raster">
+              <a class="kopf-c__eintrag" href="#"><b>Übersicht</b><span>Engineering-Dienstleister mit Motorsport-Wurzeln</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Über uns</b><span>Struktur, Kernkompetenzen und die leomax-Gruppe</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Schmidt Motorsport Historie</b><span>Vom Rallyesport zum Entwicklungspartner von Audi, VW und Opel</span></a>
+            </div>
+          </div>
+        </div>
+        <a class="k__link" href="#">Engineering</a>
+        <div class="k__gruppe"><a class="k__link" href="#">Fertigung<span class="k__chev">›</span></a>
+          <div class="kopf-c__mega">
+            <div class="kopf-c__kopfzeile">Fertigung</div>
+            <div class="kopf-c__raster">
+              <a class="kopf-c__eintrag" href="#"><b>Übersicht</b><span>CNC-Fertigung, Schweißfertigung und Montage</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>CNC-Fräsen</b><span>CAM-gestützt, vom Einzelstück bis zur Kleinserie</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Drehen</b><span>Drehteile für Prototypen und Kleinserien</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Schweißen</b><span>Rahmen, Gestelle und komplexe Baugruppen</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Blechbearbeitung</b><span>Biegen, Kanten und Anarbeiten von Blechteilen</span></a>
+            </div>
+          </div>
+        </div>
+        <a class="k__link" href="#">Messen &amp; QM</a>
+        <div class="k__gruppe"><a class="k__link" href="#">Elektro-Kart<span class="k__chev">›</span></a>
+          <div class="kopf-c__mega">
+            <div class="kopf-c__kopfzeile">Elektro-Kart</div>
+            <div class="kopf-c__raster">
+              <a class="kopf-c__eintrag" href="#"><b>Übersicht</b><span>sms revo: emissionsfreie Karts und Buggys</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>sms revo SL</b><span>Das Elektro-Slalom-Kart für die Einstiegsdisziplin</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>sms revo X</b><span>Der eBuggy für Kinder von sechs bis zwölf Jahren</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>sms revo SpaceDrive</b><span>Mit Space-Drive-Steuerung für den inklusiven Kartslalom</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Bestellformulare</b><span>Ausstattungsoptionen und Vorteilspakete zum Download</span></a>
+              <a class="kopf-c__eintrag" href="#"><b>Wichtige Dokumente</b><span>Betriebsanleitungen, Batteriehinweise, Wartungspläne</span></a>
+            </div>
+          </div>
+        </div>
+        <a class="k__knopf k__shop" href="#">Kart-Shop</a>
+        <a class="k__knopf k__kontakt" href="#">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+  <div class="demo__bild"><p>Flexibilität. Präzision. Zuverlässigkeit.</p></div>
+  <div class="demo__text">
+    <p>Die Leiste selbst bleibt, wie sie ist. Nur was sich öffnet, ist anders: statt einer schmalen
+      Liste eine Fläche über die ganze Breite, in der jeder Punkt eine Zeile zur Erklärung bekommt.</p>
+  </div>
+  <div class="demo__balken"></div>
+</div>
+<div class="vgl__notiz">
+  <strong class="t-title-md" style="color: var(--ink)">Was das bringt</strong>
+  <ul class="t-body-sm">
+    <li>„Elektro-Kart" hat sechs Unterpunkte, „Fertigung" fünf. In der schmalen Liste stehen sie als
+      nackte Begriffe untereinander; hier sagt jede Zeile, was dahintersteckt.</li>
+    <li>Jedes Untermenü bekommt den Punkt <strong>Übersicht</strong> — heute erreicht man die
+      Übersichtsseite am Rechner nur, indem man den Elternpunkt selbst anklickt. Das weiß nicht jeder.</li>
+    <li>Die Texte sind keine Erfindung: sie stammen aus den Seitenbeschreibungen, die ohnehin für
+      Suchmaschinen hinterlegt sind.</li>
+    <li><em>Preis:</em> Eine große Fläche, die aufklappt, will sorgfältig bedient werden — sie darf
+      nicht zu früh auf- und nicht zu schnell zugehen. Auf dem Handy ändert sich nichts.</li>
+  </ul>
+</div>
+
+<div class="vgl__notiz" style="border-top: 1px solid var(--hairline); padding-top: 26px">
+  <strong class="t-title-md" style="color: var(--ink)">Gemeinsam für alle drei</strong>
+  <ul class="t-body-sm">
+    <li>Der Kart-Shop-Knopf ist durchsichtig mit roter Kante und heißt überall „Kart-Shop". Beim
+      Überfahren füllt er sich rot. Diese Änderung ist bereits auf allen 20 Seiten umgesetzt.</li>
+    <li>Der Kontakt-Knopf bleibt die eine volle Fläche im Kopfbereich — zwei gefüllte Knöpfe
+      nebeneinander lesen sich wie zwei Hauptwege.</li>
+    <li>Unter 1.160 Pixeln und auf allen Geräten ohne Maus bleibt es beim Brennermenü, so wie heute.</li>
+  </ul>
+</div>
+
+<script>
+  // Jeder Vorschaukasten scrollt für sich: ab 40 px gilt der Kopf als gescrollt.
+  document.querySelectorAll('.demo').forEach(function (box) {
+    var kopf = box.querySelector('[data-kopf]');
+    if (!kopf) { return; }
+    box.addEventListener('scroll', function () {
+      kopf.classList.toggle('ist-gescrollt', box.scrollTop > 40);
+    }, { passive: true });
+  });
+</script>
+</body>
+</html>

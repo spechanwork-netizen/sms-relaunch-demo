@@ -8,12 +8,12 @@ const OUT = process.env.OUT || '/tmp/kontrast';
   fs.mkdirSync(OUT, { recursive: true });
   const b = await chromium.launch();
   const daten = {};
-  for (const f of fs.readdirSync(SITE).filter(x => x.endsWith('.html')).sort()) {
+  for (const f of fs.readdirSync(SITE).filter(x => x.endsWith('.html') && !x.endsWith('-optionen.html')).sort()) {
     const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
     await p.goto('http://localhost:8971/' + f, { waitUntil: 'networkidle' });
     await p.waitForTimeout(450);
     const ziele = await p.evaluate(() => {
-      const hero = document.querySelector('.hero-parallax');
+      const hero = document.querySelector('.hero-parallax, .hero-buehne');
       if (!hero) return [];
       return [...hero.querySelectorAll('h1, p, span.t-label, a.ds-btn')].map(e => {
         const r = e.getBoundingClientRect(), cs = getComputedStyle(e);
@@ -26,7 +26,7 @@ const OUT = process.env.OUT || '/tmp/kontrast';
       }).filter(z => z.w > 10 && z.h > 6 && z.y >= 0 && z.y + z.h < 900 && !z.eigenerGrund);
     });
     if (!ziele.length) { await p.close(); continue; }
-    await p.addStyleTag({ content: '.hero-parallax h1,.hero-parallax p,.hero-parallax span,.hero-parallax a{color:transparent !important}' });
+    await p.addStyleTag({ content: '.hero-parallax h1,.hero-parallax p,.hero-parallax span,.hero-parallax a,.hero-buehne h1,.hero-buehne p,.hero-buehne span,.hero-buehne a{color:transparent !important}' });
     await p.waitForTimeout(200);
     await p.screenshot({ path: OUT + '/' + f + '.png' });
     daten[f] = ziele;

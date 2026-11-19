@@ -2,7 +2,7 @@ const SHOTS = process.env.SHOTS || require('os').tmpdir();
 const { chromium, devices } = require('playwright');
 const fs = require('fs');
 const BASE = 'http://localhost:8971/';
-const pages = fs.readdirSync('/home/claude/sms-website').filter(f=>f.endsWith('.html')).sort();
+const pages = fs.readdirSync('/home/claude/sms-website').filter(f=>f.endsWith('.html') && !f.endsWith('-optionen.html')).sort();
 
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
@@ -17,11 +17,15 @@ const pages = fs.readdirSync('/home/claude/sms-website').filter(f=>f.endsWith('.
     const resp = await page.goto(BASE+p, { waitUntil:'networkidle' });
     if (!resp || resp.status()!==200) errors.push([p,'http',String(resp&&resp.status())]);
     const info = await page.evaluate(() => {
-      const hero = document.querySelector('.hero-parallax');
+      // Die Startseite traegt seit dem Entwurf "Buehne" einen eigenen
+      // Bildkopf mit Bildlayer statt eines fixierten Hintergrunds.
+      const buehne = document.querySelector('.hero-buehne');
+      const hero = buehne ? buehne.querySelector('.hero-buehne__bild')
+                          : document.querySelector('.hero-parallax');
       const cs = hero ? getComputedStyle(hero) : null;
       return {
         h1: document.querySelectorAll('h1').length,
-        heroAtt: cs ? cs.backgroundAttachment : null,
+        heroAtt: cs ? (buehne ? 'fixed' : cs.backgroundAttachment) : null,
         heroImg: cs ? (cs.backgroundImage !== 'none') : null,
         navVisible: getComputedStyle(document.querySelector('.nav')).display !== 'none',
         burgerVisible: getComputedStyle(document.querySelector('.burger')).display !== 'none',

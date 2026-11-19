@@ -5,7 +5,7 @@ const BASE = 'http://localhost:8971/';
 const SITE = '/home/claude/sms-website';
 
 (async () => {
-  const pages = fs.readdirSync(SITE).filter(f => f.endsWith('.html')).sort();
+  const pages = fs.readdirSync(SITE).filter(f => f.endsWith('.html') && !f.endsWith('-optionen.html')).sort();
   const b = await chromium.launch();
   const befunde = [];
   const add = (seite, art, text) => befunde.push({ seite, art, text });
@@ -26,7 +26,8 @@ const SITE = '/home/claude/sms-website';
         const rec = { i, klasse: s.className || '-', hoehe: Math.round(sr.height),
                       padTop: parseFloat(cs.paddingTop), padBottom: parseFloat(cs.paddingBottom),
                       bg: cs.backgroundColor };
-        if (inner && !s.classList.contains('hero-parallax')) {
+        if (inner && !s.classList.contains('hero-parallax')
+                  && !s.classList.contains('hero-buehne')) {
           const ir = inner.getBoundingClientRect();
           rec.links = Math.round(ir.left);
           rec.rechts = Math.round(W - ir.right);
@@ -67,7 +68,10 @@ const SITE = '/home/claude/sms-website';
         if (r.width === 0) return;
         if (r.right > W + 1 || r.left < -1) {
           const pos = getComputedStyle(e).position;
-          if (pos !== 'fixed' && !e.closest('.hero-parallax') && !e.closest('.ds-cta-band'))
+          // .hero-buehne clippt selbst (overflow: hidden) - der Bildlayer
+          // ist absichtlich groesser als die Sektion, er zoomt.
+          if (pos !== 'fixed' && !e.closest('.hero-parallax')
+              && !e.closest('.hero-buehne') && !e.closest('.ds-cta-band'))
             out.probleme.push(`laeuft ueber den Rand: ${e.tagName.toLowerCase()}.${(e.className || '').toString().split(' ')[0]}`);
         }
       });

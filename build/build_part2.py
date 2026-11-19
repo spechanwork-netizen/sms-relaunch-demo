@@ -28,7 +28,7 @@ HEAD = """<!DOCTYPE html>
 <header class="site-header">
   <div class="site-header__inner">
     <a class="brand" href="index.html" aria-label="sms engineering GmbH, zur Startseite">
-      <img src="assets/img/sms-logo.png" alt="sms engineering GmbH" width="115" height="48">
+      <img src="assets/img/sms-logo-hell.png" alt="sms engineering GmbH" width="114" height="48">
     </a>
     <nav class="nav" aria-label="Hauptnavigation">{nav}</nav>
     <button class="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobilmenue">
@@ -199,15 +199,32 @@ h1, h2, h3, h4, p, ul { margin: 0; }
 
 /* Kontakt-Knopf: schwarz mit weisser Schrift, faehrt beim Ueberfahren
    weich auf Rot. Die Schrift bleibt dabei weiss. */
-.ds-btn.nav-contact, .ds-btn.nav-shop, .ds-btn.mnav__cta {
+.ds-btn.nav-contact, .ds-btn.mnav__cta {
   background: var(--surface-dark); color: var(--on-dark);
   transition: background-color .3s cubic-bezier(.22, .61, .36, 1),
               color .3s cubic-bezier(.22, .61, .36, 1);
 }
 .ds-btn.nav-contact:hover, .ds-btn.nav-contact:focus-visible,
-.ds-btn.nav-shop:hover, .ds-btn.nav-shop:focus-visible,
 .ds-btn.mnav__cta:hover, .ds-btn.mnav__cta:focus-visible {
   background: var(--primary); color: var(--on-dark);
+}
+/* Kart-Shop: durchsichtig mit roter Kante. Er steht neben dem Kontakt-Knopf
+   und soll ihn nicht verdoppeln - zwei volle Flaechen nebeneinander lesen
+   sich wie zwei Hauptwege. Die Polsterung ist um die Randstaerke verringert,
+   damit beide Knoepfe gleich hoch bleiben. */
+.ds-btn.nav-shop, .ds-btn.mnav__shop {
+  background: transparent; color: var(--primary);
+  border: 1px solid var(--primary); box-sizing: border-box;
+  transition: background-color .3s cubic-bezier(.22, .61, .36, 1),
+              color .3s cubic-bezier(.22, .61, .36, 1);
+}
+.ds-btn.nav-shop:hover, .ds-btn.nav-shop:focus-visible,
+.ds-btn.mnav__shop:hover, .ds-btn.mnav__shop:focus-visible {
+  background: var(--primary); color: var(--on-primary);
+}
+.nav-shop {
+  height: auto; padding: 13px 21px; font-size: 13px;
+  letter-spacing: 1.5px; text-transform: uppercase;
 }
 
 .burger {
@@ -473,6 +490,204 @@ main div:has(> .ds-card) { gap: clamp(24px, 3.2vw, 44px) !important; }
   .hero-parallax, .ds-cta-band { background-attachment: scroll; }
   * { transition-duration: .01ms !important; }
 }
+
+/* --- Bildkopf der Startseite: Entwurf "Buehne" ---------------------------
+   Gilt nur fuer index.html. Die Unterseiten behalten .hero-parallax mit
+   background-attachment: fixed. Hier liegt das Motiv in einem eigenen
+   Layer, weil ein fixierter Hintergrund sich nicht zoomen laesst - und der
+   langsame Zoom ("das Bild atmet") ist der Kern des Entwurfs. */
+.hero-buehne {
+  position: relative; overflow: hidden;
+  background-color: var(--surface-dark);
+  min-height: min(88vh, 780px);
+  display: grid; align-content: end;
+  padding: clamp(120px, 18vw, 240px) clamp(20px, 4vw, 32px) clamp(44px, 6vw, 72px);
+}
+.hero-buehne__bild {
+  position: absolute; inset: 0; z-index: 0;
+  background-size: cover; background-position: center 58%;
+  animation: heroZoom 24s ease-in-out infinite alternate;
+}
+@keyframes heroZoom { from { transform: scale(1.04); } to { transform: scale(1.16); } }
+/* Dieselben zwei Verlaeufe wie bei .hero-parallax - der Entwurf aendert die
+   Anordnung, nicht die Lesbarkeitsgrundlage. */
+.hero-buehne::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(14, 19, 25, .76) 0%, rgba(14, 19, 25, .38) 48%,
+                           rgba(14, 19, 25, 0) 78%),
+    linear-gradient(180deg, rgba(20, 26, 33, .26) 0%, rgba(20, 26, 33, .40) 34%,
+                            rgba(14, 19, 25, .84) 76%, rgba(12, 17, 22, .93) 100%);
+}
+.hero-buehne::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+  background: var(--primary); z-index: 4;
+}
+.hero-buehne__inhalt {
+  position: relative; z-index: 3; width: 100%; max-width: 1440px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 14px;
+}
+.hero-buehne__regel {
+  display: block; height: 3px; width: 96px; background: var(--primary);
+  transform: scaleX(0); transform-origin: left;
+  animation: heroRegel .9s .15s cubic-bezier(.22, .61, .36, 1) forwards;
+}
+@keyframes heroRegel { to { transform: scaleX(1); } }
+.hero-buehne__kenn { color: var(--on-dark); opacity: 0; animation: heroEin .7s .3s ease forwards; }
+.hero-buehne__titel {
+  color: var(--on-dark); font-size: clamp(36px, 6.4vw, 78px);
+  line-height: 1.02; letter-spacing: -1.4px; margin: 2px 0 4px; max-width: 16ch;
+}
+/* Jede Zeile faehrt aus ihrem eigenen Fenster hoch. Das Fenster muss
+   overflow: hidden haben, sonst sieht man die Schrift von unten kommen. */
+.hero-buehne__zeile { display: block; overflow: hidden; }
+.hero-buehne__zeile > span {
+  display: block; transform: translateY(105%);
+  animation: heroHoch .85s cubic-bezier(.16, 1, .3, 1) forwards;
+}
+.hero-buehne__zeile:nth-child(1) > span { animation-delay: .42s; }
+.hero-buehne__zeile:nth-child(2) > span { animation-delay: .55s; }
+.hero-buehne__zeile:nth-child(3) > span { animation-delay: .68s; }
+@keyframes heroHoch { to { transform: translateY(0); } }
+.hero-buehne__text {
+  color: var(--on-dark-soft); max-width: 560px; margin: 0;
+  opacity: 0; animation: heroEin .7s .95s ease forwards;
+}
+.hero-buehne__knoepfe {
+  display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;
+  opacity: 0; animation: heroEin .7s 1.07s ease forwards;
+}
+@keyframes heroEin { to { opacity: 1; } }
+.hero-buehne__logo {
+  position: absolute; z-index: 3; right: clamp(20px, 4vw, 32px);
+  bottom: clamp(34px, 5vw, 60px); width: clamp(132px, 14vw, 200px);
+  height: auto; display: block; opacity: 0;
+  animation: heroEin .8s 1.25s ease forwards;
+}
+/* Auf dem Handy laege das Logo auf den Knoepfen - die Kopfleiste zeigt es
+   ohnehin. */
+@media (max-width: 760px) { .hero-buehne__logo { display: none; } }
+.hero-buehne__cue {
+  position: absolute; z-index: 4; left: clamp(20px, 4vw, 32px); bottom: 14px;
+  width: 1px; height: 46px; background: rgba(255, 255, 255, .18);
+}
+.hero-buehne__cue::after {
+  content: ""; position: absolute; inset: 0; background: var(--primary);
+  animation: heroCue 2.2s ease-in-out infinite;
+}
+@keyframes heroCue {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  45%  { transform: scaleY(1); transform-origin: top; }
+  55%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* Knoepfe im Bildkopf: die Farbe wischt von links herein statt umzuspringen.
+   Die Beschriftung steckt in einem <span>, weil ein positioniertes ::before
+   sonst ueber dem Text laege. */
+.hero-knopf { position: relative; overflow: hidden; transition: transform .25s cubic-bezier(.22, .61, .36, 1); }
+.hero-knopf > span { position: relative; z-index: 1; }
+.hero-knopf::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  transform: scaleX(0); transform-origin: right;
+  transition: transform .4s cubic-bezier(.76, 0, .24, 1);
+}
+.hero-knopf:hover, .hero-knopf:focus-visible { transform: translateY(-2px); }
+.hero-knopf:hover::before, .hero-knopf:focus-visible::before { transform: scaleX(1); transform-origin: left; }
+.ds-btn--primary.hero-knopf::before { background: var(--action-bg-active); }
+.ds-btn--primary.hero-knopf:hover, .ds-btn--primary.hero-knopf:focus-visible { background: var(--action-bg); }
+.ds-btn--secondary-on-dark.hero-knopf::before { background: var(--on-dark); }
+.ds-btn--secondary-on-dark.hero-knopf { transition: transform .25s cubic-bezier(.22, .61, .36, 1), color .25s .12s ease; }
+.ds-btn--secondary-on-dark.hero-knopf:hover,
+.ds-btn--secondary-on-dark.hero-knopf:focus-visible { background: transparent; color: var(--surface-dark); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-buehne__bild, .hero-buehne__regel, .hero-buehne__kenn,
+  .hero-buehne__zeile > span, .hero-buehne__text, .hero-buehne__knoepfe,
+  .hero-buehne__logo, .hero-buehne__cue::after { animation: none; }
+  .hero-buehne__regel { transform: scaleX(1); }
+  .hero-buehne__zeile > span { transform: none; }
+  .hero-buehne__kenn, .hero-buehne__text, .hero-buehne__knoepfe,
+  .hero-buehne__logo { opacity: 1; }
+  /* Ohne Bewegung bleibt der schlichte Farbwechsel von frueher. */
+  .hero-knopf, .hero-knopf::before { transition: none; }
+  .hero-knopf:hover, .hero-knopf:focus-visible { transform: none; }
+  .hero-knopf::before { display: none; }
+  .ds-btn--primary.hero-knopf:hover,
+  .ds-btn--primary.hero-knopf:focus-visible { background: var(--action-bg-active); }
+  .ds-btn--secondary-on-dark.hero-knopf:hover,
+  .ds-btn--secondary-on-dark.hero-knopf:focus-visible { background: var(--on-dark); color: var(--surface-dark); }
+}
+
+/* --- Kopfbereich: Entwurf B ----------------------------------------------
+   Die Leiste liegt ueber dem Bildkopf (position: fixed) statt darueber zu
+   stehen, ist dort durchsichtig und wird beim Scrollen dunkel. Beim
+   Herunterscrollen faehrt sie ganz weg und kommt erst zurueck, wenn wieder
+   nach oben gescrollt wird - das erledigt motion.js ueber .is-hidden.
+
+   Grundzustand ist bewusst die dunkle Leiste: ohne JavaScript gibt es kein
+   .js-motion und damit kein .is-scrolled. Eine durchsichtige Leiste stuende
+   dann spaeter ueber weissem Inhalt und waere unlesbar. */
+.site-header {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 60;
+  background: var(--surface-dark);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+.js-motion .site-header:not(.is-scrolled) {
+  background: transparent; border-bottom-color: rgba(255, 255, 255, .20);
+}
+/* Schleier hinter der durchsichtigen Leiste. Weisse Schrift allein reicht
+   auf einem Industriefoto nicht - auf den hellen Stellen der Maschine war
+   die Navigation ohne diesen Verlauf nicht zu lesen. */
+.site-header::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; bottom: -44px;
+  z-index: -1; pointer-events: none; opacity: 0; transition: opacity .3s ease;
+  background: linear-gradient(180deg, rgba(10, 14, 18, .74) 0%,
+                                      rgba(10, 14, 18, .48) 56%,
+                                      rgba(10, 14, 18, 0) 100%);
+}
+.js-motion .site-header:not(.is-scrolled)::before { opacity: 1; }
+
+/* Sprungziele muessen unter der festen Leiste landen, nicht darunter. */
+html { scroll-padding-top: 92px; }
+
+/* Beschriftungen auf dunklem Grund. Rot als Schriftfarbe kaeme hier nur auf
+   3:1 - deshalb bleibt die Schrift weiss, und der rote Strich aus motion.css
+   uebernimmt die Rueckmeldung beim Ueberfahren. */
+.nav > a:not(.nav-contact):not(.nav-shop), .nav__top, .nav-group__top { color: var(--on-dark); }
+.hv-primary:hover, .hv-primary:focus-visible { color: var(--on-dark); }
+.nav [aria-current="page"],
+.nav .nav-group:has([aria-current="page"]) .nav-group__top { color: var(--on-dark); }
+
+/* Klappmenues ebenfalls dunkel - ein weisses Feld unter einer dunklen
+   Leiste sieht aus wie ein Fremdkoerper. */
+.nav-drop {
+  background: var(--surface-dark); border-color: rgba(255, 255, 255, .14);
+  border-top-color: var(--primary);
+}
+.nav-drop a { color: var(--on-dark); }
+.hv-primary-soft:hover, .hv-primary-soft:focus-visible {
+  color: var(--on-dark); background: rgba(255, 255, 255, .09);
+}
+
+/* Kontakt gefuellt rot, Kart-Shop nur mit roter Kante und weisser Schrift. */
+.ds-btn.nav-contact { background: var(--primary); color: var(--on-primary); }
+.ds-btn.nav-contact:hover, .ds-btn.nav-contact:focus-visible { background: var(--primary-active); }
+.ds-btn.nav-shop { color: var(--on-dark); }
+
+/* Der Brennerknopf war eine dunkle Flaeche - auf der dunklen Leiste waere
+   er unsichtbar. Jetzt nur noch eine feine Kante. */
+.burger { background: transparent; border: 1px solid rgba(255, 255, 255, .38); }
+
+/* Bei offenem Mobilmenue muss die Leiste dunkel und voll hoch sein: das
+   Menue beginnt bei 76 px, eine geschrumpfte Leiste liesse einen Spalt. */
+.js-motion body.mnav-open .site-header,
+body.mnav-open .site-header {
+  background: var(--surface-dark); border-bottom-color: rgba(255, 255, 255, .12);
+}
+.js-motion body.mnav-open .site-header::before { opacity: 0; }
+body.mnav-open .site-header__inner,
+.js-motion body.mnav-open .site-header.is-scrolled .site-header__inner { min-height: 76px; }
 """
 
 SITE_JS = """/* sms engineering — Website

@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const BASE = 'http://localhost:8971/';
 (async () => {
-  const pages = fs.readdirSync('/home/claude/sms-website').filter(f => f.endsWith('.html'));
+  const pages = fs.readdirSync('/home/claude/sms-website').filter(f => f.endsWith('.html') && !f.endsWith('-optionen.html'));
   const b = await chromium.launch();
   let bad = [];
   for (const f of pages) {

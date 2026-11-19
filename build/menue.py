@@ -36,7 +36,7 @@ BEREICHE = [("engineering.html", "Engineering"), ("fertigung.html", "Fertigung")
 def kopf(aktiv):
     def cur(d):
         return ' aria-current="page"' if d == aktiv else ""
-    teile = [f'<a class="ds-btn ds-btn--primary nav-shop" href="{SHOP}" target="_blank" rel="noopener">Shop</a>']
+    teile = [f'<a class="ds-btn nav-shop" href="{SHOP}" target="_blank" rel="noopener">Kart-Shop</a>']
     for datei, text, kinder in MENUE:
         if kinder:
             drop = "".join(f'<a class="t-nav hv-primary-soft" href="{k}"{cur(k)}>{t}</a>' for k, t in kinder)
@@ -54,7 +54,7 @@ def kopf(aktiv):
 def mobil(aktiv):
     def cur(d):
         return ' aria-current="page"' if d == aktiv else ""
-    teile = [f'<a class="ds-btn ds-btn--primary mnav__cta mnav__shop" href="{SHOP}" target="_blank" rel="noopener">Shop</a>',
+    teile = [f'<a class="ds-btn mnav__cta mnav__shop" href="{SHOP}" target="_blank" rel="noopener">Kart-Shop</a>',
              f'<div class="mnav__block"><a class="t-title-md" href="index.html"{cur("index.html")}>Start</a></div>']
     for datei, text, kinder in MENUE:
         if kinder:

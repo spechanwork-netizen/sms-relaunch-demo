@@ -7,17 +7,29 @@ const last = u => u.split('/').pop();
   const errs = [];
   p.on('pageerror', e => errs.push(String(e)));
   const Y = () => p.evaluate(() => Math.round(scrollY));
+  // Seit dem Kopfbereich "Entwurf B" faehrt die Leiste beim Herunterscrollen
+  // weg. Wer sie anklicken will, scrollt vorher ein Stueck hoch - genau das
+  // macht dieser Helfer, sonst klickt der Test ins Leere.
+  const kopfZeigen = async (seite, y) => {
+    // Erst ans Ziel, dann 200 px zurueck. Das Zurueck muss von der
+    // tatsaechlich erreichten Hoehe ausgehen: kurze Seiten koennen gar nicht
+    // so weit scrollen, und dann gaebe es keine Aufwaertsbewegung.
+    await seite.evaluate(z => scrollTo(0, z), y);
+    await seite.waitForTimeout(280);
+    await seite.evaluate(() => scrollTo(0, Math.max(0, Math.round(window.pageYOffset) - 200)));
+    await seite.waitForTimeout(480);
+  };
   const out = [];
 
   await p.goto(B + 'index.html', { waitUntil: 'networkidle' });
-  await p.evaluate(() => scrollTo(0, 2000)); await p.waitForTimeout(400);
+  await kopfZeigen(p, 2000);
   const y1a = await Y();
   await Promise.all([p.waitForLoadState('networkidle'),
                      p.click('.site-header .nav a[href="fertigung.html"]')]);
   await p.waitForTimeout(800);
   out.push(['Kopfmenue -> andere Seite', `${y1a} -> ${last(p.url())} y=${await Y()}`]);
 
-  await p.evaluate(() => scrollTo(0, 1800)); await p.waitForTimeout(400);
+  await kopfZeigen(p, 1800);
   const y2a = await Y();
   await p.click('.site-header .nav a[href="fertigung.html"]');
   await p.waitForTimeout(1300);
@@ -48,7 +60,7 @@ const last = u => u.split('/').pop();
   const m = await b.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   m.on('pageerror', e => errs.push('mobil: ' + e));
   await m.goto(B + 'index.html', { waitUntil: 'networkidle' });
-  await m.evaluate(() => scrollTo(0, 1600)); await m.waitForTimeout(400);
+  await kopfZeigen(m, 1600);
   await m.click('.burger'); await m.waitForTimeout(400);
   await Promise.all([m.waitForLoadState('networkidle'),
                      m.click('.mnav a[href="fraesen.html"]')]);
@@ -56,7 +68,7 @@ const last = u => u.split('/').pop();
   out.push(['Mobilmenue -> Seite', `${last(m.url())} y=${await m.evaluate(() => Math.round(scrollY))} ` +
     `lock=${await m.evaluate(() => getComputedStyle(document.body).overflow)}`]);
   // gleiche Seite aus dem Mobilmenue
-  await m.evaluate(() => scrollTo(0, 900)); await m.waitForTimeout(300);
+  await kopfZeigen(m, 900);
   await m.click('.burger'); await m.waitForTimeout(400);
   await m.click('.mnav a[href="fraesen.html"]');
   await m.waitForTimeout(1300);

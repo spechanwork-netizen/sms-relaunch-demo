@@ -15,7 +15,22 @@
   if (!('IntersectionObserver' in window)) { return; }
 
   root.classList.add('js-motion');
-  if (reduced) { return; }          // CSS blendet dann alles statisch ein
+
+  // Im ruhigen Modus steigt der Rest aus. Die Leiste muss trotzdem dunkel
+  // werden, sobald gescrollt wird - sonst bliebe sie durchsichtig und
+  // stuende spaeter ueber weissem Inhalt. Weggefahren wird sie dort nicht:
+  // das waere Bewegung, die ausdruecklich abbestellt wurde.
+  if (reduced) {
+    var ruhigerKopf = document.querySelector('.site-header');
+    if (ruhigerKopf) {
+      var ruhigPruefen = function () {
+        ruhigerKopf.classList.toggle('is-scrolled', (window.pageYOffset || 0) > 10);
+      };
+      window.addEventListener('scroll', ruhigPruefen, { passive: true });
+      ruhigPruefen();
+    }
+    return;
+  }          // CSS blendet dann alles statisch ein
 
   var EASE_OUT = function (t) { return 1 - Math.pow(1 - t, 3); };
 
@@ -34,6 +49,9 @@
     // zappelig, und Meldungen, die erst spaeter sichtbar werden, bekaemen
     // sonst opacity:0 und blieben unsichtbar.
     if (el.closest('form')) { return false; }
+    // Der Bildkopf der Startseite bringt seine eigene Choreografie mit -
+    // ein zweites Einblenden daruebergelegt wuerde sich beissen.
+    if (el.closest('.hero-buehne')) { return false; }
     // Was beim Start keine Flaeche hat, meldet der IntersectionObserver nie
     // als sichtbar - also gar nicht erst verstecken.
     if (el.hidden) { return false; }
@@ -100,7 +118,7 @@
   }
 
   // Kopfbereich: Inhalt laeuft langsamer als die Seite und blendet aus
-  var heroInner = document.querySelector('.hero-parallax > div');
+  var heroInner = document.querySelector('.hero-parallax > div, .hero-buehne__inhalt');
   if (heroInner) {
     heroInner.setAttribute('data-px', 'hero');
     heroInner.removeAttribute('data-anim');
@@ -131,6 +149,8 @@
   Array.prototype.forEach.call(
     document.querySelectorAll('main img:not(.ds-card__photo)'), function (img) {
       if (img.closest('.ds-card')) { return; }
+      // Das Logo im Bildkopf der Startseite blendet sich selbst ein.
+      if (img.closest('.hero-buehne')) { return; }
       img.setAttribute('data-anim', 'fade');
       img.setAttribute('data-px', '1');
       parallaxed.push(img);

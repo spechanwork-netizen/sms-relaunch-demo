@@ -690,6 +690,170 @@ Nur Inhalt, keine Technik — erledigt von `build/texte-18-11.py`:
   sind raus, die Stichpunkte der Konstruktion und die beiden Spaltentexte beim
   Messmittelbau sind ersetzt.
 
+## Textrunde vom 19.11.2026
+
+Erledigt von `build/ueberuns-19-11.py`:
+
+* **Über uns:** Das Stichwortband „Was uns ausmacht" sitzt jetzt zwischen dem
+  Teambild und dem Fließtext — also über dem Text statt darunter.
+* **Über uns:** Über den drei Spalten Engineering / Fertigung /
+  Qualitätsmanagement steht neu die Zeile **„Was wir können"**, passend zum
+  Band darüber.
+
+Eine Falle dabei, für den Fall dass das Skript noch einmal angefasst wird: der
+nicht-gierige Ausdruck `.*?\n *</div>` trifft das Ende des **inneren**
+Spezifikationsrasters, nicht das Ende des Bandes. Das Band wanderte dadurch
+nur als Bruchstück, und der Textblock landete im Band verschachtelt. Der
+Ausdruck ist deshalb auf die exakte Einrückung von sechs Leerzeichen
+festgenagelt.
+
+## Entwürfe für den Bildkopf der Startseite
+
+`hero-optionen.html` ist **keine Seite der Website**, sondern eine
+Vergleichsseite: drei lauffähige Entwürfe für die Hero-Sektion untereinander,
+mit dem echten Foto, dem echten Logo und den echten Schriften.
+
+* **A — Bühne:** Vollbild, das Foto zoomt über 24 Sekunden kaum merklich,
+  roter Strich zieht sich auf, die drei Zeilen steigen nacheinander hoch,
+  unten links eine pulsende Scroll-Andeutung.
+* **B — Roter Keil:** geteilter Bildschirm, Text auf ruhiger dunkler Fläche,
+  ein dunkler Keil mit roter Diagonalkante schiebt sich über das Foto, jede
+  Zeile wird von einem roten Balken freigewischt. Keil und rote Kante sind
+  bewusst **ein** Element — als sie getrennt waren, liefen sie auseinander.
+* **C — Wortbühne:** die drei Worte riesig untereinander, links taktet eine
+  rote Schiene sie ein, darunter drei Kennzahlen statt eines zweiten Satzes.
+
+Alles reines CSS, keine Bibliothek. `prefers-reduced-motion` schaltet jede
+Animation ab und lässt den Endzustand stehen. Auf dem Handy ist das Logo in
+Entwurf A ausgeblendet, weil es sonst auf den Knöpfen liegt; der Kopfbereich
+der Website zeigt es ohnehin.
+
+Die Prüfskripte lassen `hero-optionen.html` aus — die Seite hat absichtlich
+vier `<h1>` und keinen Kopfbereich, was sonst jeden Durchlauf mit
+Falschmeldungen füllen würde.
+
+## Bildkopf der Startseite — Entwurf A ist gesetzt (19.11.2026)
+
+Gebaut von `build/hero-buehne.py`. Nur die Startseite; die 19 Unterseiten
+behalten `.hero-parallax` unverändert.
+
+* **Reihenfolge:** roter Strich → `FLY | HIGH | BUTTERFLY` → Überschrift in
+  drei Zeilen → Fließtext → zwei Knöpfe. Das Logo sitzt unten rechts, unten
+  links eine pulsende Scroll-Andeutung.
+* **Knöpfe:** nur noch zwei — **Kart-Shop** in Rot (zu `shop.sms.gmbh`,
+  neuer Tab) und **Kontakt** mit weißem Rand. Bei beiden wischt die Farbe von
+  links herein statt umzuspringen, dazu ein Anheben um 2 px. Die Beschriftung
+  steckt in einem `<span>`, weil das `::before` für den Wisch sonst über dem
+  Text läge.
+* **Bewegung:** das Motiv zoomt über 24 Sekunden zwischen 1,04 und 1,16 —
+  deshalb liegt es in einem eigenen Layer. Ein fixierter Hintergrund
+  (`background-attachment: fixed`) lässt sich nicht zoomen; das ist der
+  einzige Grund, warum die Startseite hier von den Unterseiten abweicht.
+* **Höhe:** `min(88vh, 780px)`, Inhalt unten angeschlagen. Die H1 steht damit
+  bei 1440 px zufällig genau 321 px unter der Kopfleiste — derselbe Wert wie
+  auf allen Unterseiten.
+* **Handy:** das Logo ist unter 760 px ausgeblendet, sonst läge es auf den
+  Knöpfen. Bei 390 × 844 steht der komplette Bildkopf inklusive beider Knöpfe
+  über der Falz.
+* **Ruhiger Modus:** `prefers-reduced-motion` schaltet Zoom, Einblenden und
+  Wisch ab; die Knöpfe fallen auf den schlichten Farbwechsel von vorher
+  zurück.
+
+`assets/motion.js` wurde an drei Stellen angepasst: der Bildkopf ist vom
+allgemeinen Einblenden ausgenommen (er bringt seine eigene Choreografie mit),
+der Scroll-Versatz des Kopfinhalts greift jetzt auch auf `.hero-buehne__inhalt`,
+und das Hero-Logo ist vom Bilder-Parallax ausgenommen.
+
+Die Prüfskripte kennen den neuen Bildkopf: `check.js` wertet ihn wie einen
+Parallax-Kopf, `audit.js` nimmt den Bildlayer von der Randprüfung aus (er ist
+absichtlich größer als die Sektion und wird von `overflow: hidden` beschnitten),
+`kontrast.js` misst ihn mit.
+
+## Kart-Shop-Knopf im Kopfbereich (19.11.2026)
+
+Der Knopf heißt jetzt überall **„Kart-Shop"** statt „Shop" und ist
+durchsichtig mit roter Kante statt schwarz gefüllt; beim Überfahren füllt er
+sich rot. Geändert in `build/menue.py` (die maßgebliche Stelle für die
+Navigation) und in `assets/site.css`, von dort auf alle 20 Seiten geschrieben.
+
+Zwei Kleinigkeiten, die dabei zählen: `.ds-btn.nav-shop` musste aus der
+dunklen Gruppe mit `nav-contact` und `mnav__cta` heraus, sonst hätte die
+gefüllte Regel gewonnen. Und die Polsterung ist von 14/22 auf 13/21 Pixel
+verringert, weil die 1 Pixel starke Kante den Knopf sonst 2 Pixel höher
+gemacht hätte als den Kontakt-Knopf daneben. Rot auf Weiß kommt auf 5,5:1 und
+ist damit über der Anforderung.
+
+## Entwürfe für den Kopfbereich
+
+`header-optionen.html` ist wie `hero-optionen.html` **keine Seite der
+Website**, sondern eine Vergleichsseite. Jeder Entwurf steckt in einem
+eigenen Fenster, das sich wirklich scrollen lässt — so ist das Verhalten beim
+Scrollen prüfbar und nicht nur beschrieben.
+
+* **A — Servicezeile:** schmale dunkle Zeile mit Telefon, E-Mail, Anschrift
+  und ISO-Hinweis über der weißen Hauptleiste. Beim Scrollen fährt sie ein,
+  die Hauptleiste geht von 76 auf 58 px, das Logo von 48 auf 36 px.
+* **B — Über dem Bild:** die Leiste schwimmt durchsichtig auf dem Bildkopf
+  und wird beim Scrollen dunkel. Braucht zwingend einen Schleier
+  (`linear-gradient` von 74 % auf 0 %) hinter der Leiste — ohne ihn ist die
+  Navigation auf den hellen Stellen des Fotos nicht lesbar; das war im ersten
+  Versuch sofort zu sehen. Rot als Schriftfarbe käme auf dem dunklen Grund
+  nur auf 3:1, deshalb bleibt beim Kart-Shop-Knopf nur die Kante rot.
+* **C — Breites Klappmenü:** die Leiste bleibt wie heute, aber die
+  Untermenüs öffnen über die ganze Breite, mit einer erklärenden Zeile je
+  Punkt und einem eigenen Eintrag „Übersicht". Die Zeilen stammen aus den
+  `meta description` der jeweiligen Seiten, sind also nicht erfunden.
+
+Die Prüfskripte lassen jetzt alle Dateien auf `-optionen.html` aus.
+
+## Kopfbereich — Entwurf B ist gesetzt (19.11.2026)
+
+Gebaut von `build/kopf-b.py`, gilt auf allen 20 Seiten.
+
+* Die Leiste liegt **über** dem Bildkopf (`position: fixed`) statt darüber zu
+  stehen. Das Bild beginnt dadurch ganz oben. Logo in der hellen Fassung,
+  Beschriftungen weiß, Klappmenüs dunkel.
+* **Beim Herunterscrollen fährt die Leiste ganz weg** und kommt zurück,
+  sobald wieder nach oben gescrollt wird. Diese Mechanik gab es in
+  `motion.js` schon (`.is-hidden` ab 420 px Scrolltiefe); neu ist, dass sie
+  jetzt sichtbar wird, weil die Leiste nicht mehr im Fluss steht.
+* Solange der Bildkopf zu sehen ist, ist die Leiste durchsichtig; danach wird
+  sie dunkel (`.is-scrolled`, ab 10 px).
+* Hinter der durchsichtigen Leiste liegt ein Schleier
+  (`linear-gradient` 74 % → 0 %). Ohne ihn ist die Navigation auf den hellen
+  Stellen des Maschinenfotos nicht lesbar — das war im Entwurf sofort zu
+  sehen und ist keine Vorsichtsmaßnahme auf Verdacht.
+* **Kontakt** ist jetzt rot gefüllt, **Kart-Shop** behält die rote Kante,
+  bekommt auf dem dunklen Grund aber weiße Schrift: Rot als Schriftfarbe
+  käme dort nur auf 3:1.
+* Der Brennerknopf war eine dunkle Fläche und wäre auf der dunklen Leiste
+  unsichtbar gewesen — jetzt nur noch eine feine helle Kante.
+
+Drei Dinge, die leicht übersehen werden und hier bewusst gelöst sind:
+
+1. **Ohne JavaScript** gibt es kein `.js-motion` und damit nie `.is-scrolled`.
+   Eine durchsichtige Leiste stünde dann später über weißem Inhalt. Deshalb
+   ist der **Grundzustand die dunkle Leiste**, und erst `.js-motion` schaltet
+   sie über dem Bildkopf durchsichtig.
+2. **Im ruhigen Modus** (`prefers-reduced-motion`) stieg `motion.js` bisher
+   aus, bevor die Kopfleiste behandelt wurde. Dort läuft jetzt ein eigener,
+   winziger Scroll-Horcher, der nur `.is-scrolled` setzt. Weggefahren wird
+   die Leiste dort nicht — das wäre Bewegung, die ausdrücklich abbestellt
+   wurde.
+3. **Sprungziele** brauchen `scroll-padding-top: 92px`, sonst verschwinden
+   sie unter der festen Leiste. Bei offenem Mobilmenü wird die Leiste dunkel
+   und bleibt auf voller Höhe, damit zwischen Leiste und Menü kein Spalt
+   entsteht.
+
+Die H1 steht jetzt 243–249 px unter der Kopfleiste statt 321 px — auf allen
+Seiten gleich, weil alle um dieselben 76 px nach oben gerückt sind.
+
+`build/check-nav.js` musste lernen, vor einem Klick auf die Kopfleiste erst
+ein Stück hochzuscrollen; sonst klickt der Test auf eine weggefahrene Leiste.
+Das Zurückscrollen geht dabei von der tatsächlich erreichten Höhe aus —
+kurze Seiten können gar nicht so weit scrollen, und dann gäbe es keine
+Aufwärtsbewegung.
+
 ## Geprüft
 
 Alle 20 Seiten in Chromium: HTTP 200, keine JavaScript-Fehler, keine

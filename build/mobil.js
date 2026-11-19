@@ -11,7 +11,7 @@ const BREITEN = [
 ];
 
 (async () => {
-  const seiten = fs.readdirSync(SITE).filter(f => f.endsWith('.html')).sort();
+  const seiten = fs.readdirSync(SITE).filter(f => f.endsWith('.html') && !f.endsWith('-optionen.html')).sort();
   const b = await chromium.launch();
   const befunde = [];
   for (const bp of BREITEN) {

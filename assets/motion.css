@@ -72,7 +72,7 @@
   background: var(--primary); transform: scaleX(0); transform-origin: left center;
   will-change: transform; pointer-events: none;
 }
-.js-motion .site-header { position: sticky; }
+.js-motion .site-header { position: fixed; }
 
 /* --- 4. Kleinteile ------------------------------------------------------- */
 .js-motion .ds-link { position: relative; }
